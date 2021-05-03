@@ -1,0 +1,31 @@
+const { Node, Schema } = require('@mayahq/module-sdk')
+
+class <%= nodeNamePascalCase %> extends Node {
+    static schema = new Schema({
+        name: '<%= nodeNameKebabCase %>',
+        category: '<%- isConfig ? 'config' : moduleName %>',
+        isConfig: <%- isConfig %> ,
+        fields: {
+            // Whatever custom fields the node needs.
+        },
+        <% if (isConfig) { -%>
+        redOpts: {
+            credentials: {
+                someSecret: { type: String }
+            }
+        }
+        <% } -%> 
+    })
+
+    onInit() {
+        // Do something on initialization of node
+    }
+
+    async onMessage(msg, vals) {
+        // Handle the message. The returned value will
+        // be sent as the message to any further nodes.
+
+    }
+}
+
+module.exports = <%= nodeNamePascalCase %>

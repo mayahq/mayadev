@@ -1,0 +1,25 @@
+{
+    "name": "name",
+    "version": "1.0.0",
+    "description": "description",
+    "main": "index.js",
+    "scripts": {},
+    "repository": {
+      "type": "git",
+      "url": "git+https://github.com/mayahq/mayadev.git"
+    },
+    "author": "dush-t",
+    "license": "ISC",
+    "bugs": {
+      "url": "https://github.com/mayahq/mayadev/issues"
+    },
+    "homepage": "https://github.com/mayahq/mayadev#readme",
+    "dependencies": {
+      "@mayahq/module-sdk": "^0.1.0"
+    },
+    "nodepath": "src/nodes",
+    "nodeRedModuleName": "mayahq",
+    "node-red": {
+      "nodes": {}
+    }
+  }
