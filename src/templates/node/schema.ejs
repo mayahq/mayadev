@@ -3,7 +3,8 @@ const { Node, Schema } = require('@mayahq/module-sdk')
 class <%= nodeNamePascalCase %> extends Node {
     static schema = new Schema({
         name: '<%= nodeNameKebabCase %>',
-        category: '<%- isConfig ? 'config' : moduleName %>',
+        label: '<%= label %>',
+        category: '<%- isConfig ? 'config' : moduleName.split('-').map((x) => `${x[0].toUpperCase()}${x.substring(1)}`).join(' ') %>',
         isConfig: <%- isConfig %> ,
         fields: {
             // Whatever custom fields the node needs.

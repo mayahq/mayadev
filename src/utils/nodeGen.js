@@ -21,9 +21,10 @@ function generateCode(templatePath, data) {
     })
 }
 
-async function nodeCodegen({ name, moduleName, isConfig }, dirpath) {
+async function nodeCodegen({ name, moduleName, isConfig, label }, dirpath) {
     const schemaTemplatePath = path.join(__dirname, '../templates/node/schema.ejs')
     const nodeTemplatePath = path.join(__dirname, '../templates/node/node.ejs')
+    const docTemplatePath = path.join(__dirname, '../templates/node/docs.html')
 
     const names = getNameVariations(name)
     const data = {
@@ -31,7 +32,8 @@ async function nodeCodegen({ name, moduleName, isConfig }, dirpath) {
         nodeNameKebabCase: names.kebabCase,
         nodeNameCamelCase: names.camelCase,
         moduleName,
-        isConfig
+        isConfig,
+        label
     }
     
     const schemaCode = await generateCode(schemaTemplatePath, data)
@@ -45,6 +47,12 @@ async function nodeCodegen({ name, moduleName, isConfig }, dirpath) {
     fs.writeFileSync(
         path.join(dirpath, `${data.nodeNameCamelCase}.node.js`),
         nodeCode
+    )
+
+    const docsTemplate = fs.readFileSync(docTemplatePath)
+    fs.writeFileSync(
+        path.join(dirpath, `${data.nodeNameCamelCase}.docs.html`),
+        docsTemplate
     )
 }
 
@@ -68,7 +76,10 @@ function addNode({ name }) {
     )
 }
 
-async function createNode({ name, isConfig= false }) {
+async function createNode({ name, isConfig= false, label }) {
+    if (!label) {
+        label = name
+    }
     const packageJson = getPackageDetails()
     const packagePath = findPackagePath()
 
@@ -87,6 +98,7 @@ async function createNode({ name, isConfig= false }) {
 
     await nodeCodegen({
         name,
+        label,
         moduleName,
         isConfig
     }, targetDir)

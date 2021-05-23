@@ -11,6 +11,10 @@ yargs(hideBin(process.argv))
             .positional('name', {
                 describe: 'Name of the node, in kebab-case'
             })
+            .option('label', {
+                alias: 'l',
+                description: 'The default pallette label of the node'
+            })
             .option('config', {
                 alias: 'c',
                 type: 'boolean',
@@ -25,7 +29,7 @@ yargs(hideBin(process.argv))
         if (argv['no-generate']) {
             addNode({ name: argv.name })
         } else {
-            createNode({ name: argv.name, isConfig: argv.config })
+            createNode({ name: argv.name, isConfig: argv.config, label: argv.label })
         }
     })
     .command('remove-node [name]', 'Remove a node', (yargs) => {

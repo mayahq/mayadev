@@ -1,5 +1,7 @@
 const <%= nodeNamePascalCase %> = require('./<%= nodeNameCamelCase %>.schema')
 
-const node = new <%= nodeNamePascalCase %>()
-const fn = (RED) => node.config(RED)
+const fn = (RED) => {
+    const node = new <%= nodeNamePascalCase %>()
+    node.config(RED)
+}
 module.exports = fn

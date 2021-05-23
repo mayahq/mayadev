@@ -17,7 +17,13 @@ function generateHtml(name) {
     }
     const targetPath = path.join(packagePath, packageJson.nodepath, `${name}/${name}`)
     const nodeClass = require(`${targetPath}.schema.js`)
-    return codegen(nodeClass, `${targetPath}.node.html`)
+    if (fs.existsSync(`${targetPath}.docs.html`)) {
+        console.log(`${targetPath}.docs.html`, 'exists')
+        return codegen(nodeClass, `${targetPath}.node.html`, `${targetPath}.docs.html`)
+    } else {
+        console.log(`${targetPath}.docs.html`, 'does not exist')
+        return codegen(nodeClass, `${targetPath}.node.html`)
+    }
 }
 
 function generateAllHtml() {
@@ -31,7 +37,12 @@ function generateAllHtml() {
     fs.readdirSync(nodepath).forEach((file) => {
         const targetPath = path.join(nodepath, file, file)
         const nodeClass = require(`${targetPath}.schema.js`)
-        codegen(nodeClass, `${targetPath}.node.html`)
+        if (fs.existsSync(`${targetPath}.docs.html`)) {
+            codegen(nodeClass, `${targetPath}.node.html`, `${targetPath}.docs.html`)
+        } else {
+            console.log(`${targetPath}.docs.html`, 'does not exist')
+            codegen(nodeClass, `${targetPath}.node.html`)
+        }
     })
 }
 
