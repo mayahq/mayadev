@@ -4,6 +4,7 @@ const { hideBin } = require('yargs/helpers')
 const { createNode, addNode, removeNode } = require('./src/utils/nodeGen')
 const { generateHtml, generateAllHtml } = require('./src/utils/htmlGen')
 const setupCli = require('./src/utils/startProject')
+const migrate = require('./src/utils/migrate')
 
 yargs(hideBin(process.argv))
     .command('add-node [name]', 'Add a new node', (yargs) => {
@@ -59,5 +60,8 @@ yargs(hideBin(process.argv))
     })
     .command('init', 'Create a new Maya module', (yargs) => yargs, (argv) => {
         setupCli()
+    })
+    .command('migrate', 'Migrate to new fix', (yargs) => yargs, (argv) => {
+        migrate()
     })
     .argv
