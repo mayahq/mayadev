@@ -1,6 +1,10 @@
 const { Node, Schema } = require('@mayahq/module-sdk')
 
 class <%= nodeNamePascalCase %> extends Node {
+    constructor(node, RED) {
+        super(node, RED)
+    }
+
     static schema = new Schema({
         name: '<%= nodeNameKebabCase %>',
         label: '<%= label %>',
