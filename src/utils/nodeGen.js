@@ -21,7 +21,7 @@ function generateCode(templatePath, data) {
     })
 }
 
-async function nodeCodegen({ name, moduleName, isConfig, label }, dirpath) {
+async function nodeCodegen({ name, moduleName, packageName, isConfig, label }, dirpath) {
     const schemaTemplatePath = path.join(__dirname, '../templates/node/schema.ejs')
     const nodeTemplatePath = path.join(__dirname, '../templates/node/node.ejs')
     const docTemplatePath = path.join(__dirname, '../templates/node/docs.html')
@@ -32,6 +32,7 @@ async function nodeCodegen({ name, moduleName, isConfig, label }, dirpath) {
         nodeNameKebabCase: names.kebabCase,
         nodeNameCamelCase: names.camelCase,
         moduleName,
+        packageName,
         isConfig,
         label
     }
@@ -90,6 +91,7 @@ async function createNode({ name, isConfig= false, label }) {
         throw new Error('Missing key "node-red-module-name" in package.json')
     }
     const moduleName = packageJson.nodeRedModuleName
+    const packageName = packageJson.name
     const nodepath = path.join(packagePath, packageJson.nodepath)
     const { camelCase } = getNameVariations(name)
 
@@ -100,7 +102,8 @@ async function createNode({ name, isConfig= false, label }) {
         name,
         label,
         moduleName,
-        isConfig
+        isConfig,
+        packageName
     }, targetDir)
 
     addNode({ name })

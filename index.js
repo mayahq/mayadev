@@ -5,6 +5,7 @@ const { createNode, addNode, removeNode } = require('./src/utils/nodeGen')
 const { generateHtml, generateAllHtml } = require('./src/utils/htmlGen')
 const setupCli = require('./src/utils/startProject')
 const migrate = require('./src/utils/migrate')
+const { setTokens, getTokens } = require('./src/utils/tokens')
 
 yargs(hideBin(process.argv))
     .command('add-node [name]', 'Add a new node', (yargs) => {
@@ -63,5 +64,11 @@ yargs(hideBin(process.argv))
     })
     .command('migrate', 'Migrate to new fix', (yargs) => yargs, (argv) => {
         migrate()
+    })
+    .command('set-tokens', 'Set tokens for module as defined in manifest', (yargs) => yargs, (argv) => {
+        setTokens()
+    })
+    .command('get-tokens', 'Get tokens currently set for module', (yargs) => yargs, (argv) => {
+        getTokens()
     })
     .argv
