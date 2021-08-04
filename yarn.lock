@@ -13,11 +13,12 @@
     "immutability-helper" "^3.1.1"
     "lockfile" "^1.0.4"
 
-"@mayahq/module-sdk@file:../module-sdk":
-  "resolved" "file:../module-sdk"
-  "version" "0.3.1"
+"@mayahq/module-sdk@^0.4.0":
+  "integrity" "sha512-ouf74Mnu8alndk66U3zTXrPbD4ERoq85twvygPiAUaDunptGk8skY3vulsWu/qOf8Yv/d1rqZpy+rS6jLHGr7g=="
+  "resolved" "https://registry.npmjs.org/@mayahq/module-sdk/-/module-sdk-0.4.0.tgz"
+  "version" "0.4.0"
   dependencies:
-    "@mayahq/maya-db" "file:../maya-db"
+    "@mayahq/maya-db" "^0.0.3"
     "async-lock" "^1.3.0"
     "dedent-js" "^1.0.1"
     "ejs" "^3.1.6"
@@ -79,6 +80,11 @@
   "version" "4.3.0"
   dependencies:
     "color-convert" "^2.0.1"
+
+"async-lock@^1.3.0":
+  "integrity" "sha512-8A7SkiisnEgME2zEedtDYPxUPzdv3x//E7n5IFktPAtMYSEAV7eNJF0rMwrVyUFj6d/8rgajLantbjcNRQYXIg=="
+  "resolved" "https://registry.npmjs.org/async-lock/-/async-lock-1.3.0.tgz"
+  "version" "1.3.0"
 
 "async@0.9.x":
   "integrity" "sha1-rqdNXmHB+JlhO/ZL2mbUx48v0X0="
@@ -214,6 +220,11 @@
   dependencies:
     "ini" "^1.3.4"
     "proto-list" "~1.2.1"
+
+"dedent-js@^1.0.1":
+  "integrity" "sha1-vuX7fJ5yfYXf+iRZDRDsGrElUwU="
+  "resolved" "https://registry.npmjs.org/dedent-js/-/dedent-js-1.0.1.tgz"
+  "version" "1.0.1"
 
 "defaults@^1.0.3":
   "integrity" "sha1-xlYFHpgX2f8I7YgUd/P+QBnz730="
