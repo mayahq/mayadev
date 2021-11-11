@@ -57,7 +57,7 @@ function getTokens() {
         modulePackageName: packageJson.name
     })
 
-    tokens.get()
+    tokens.get({ lock: false })
         .then((tok) => console.log('Got tokens:', tok))
 }
 

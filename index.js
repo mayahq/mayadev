@@ -6,6 +6,7 @@ const { generateHtml, generateAllHtml } = require('./src/utils/htmlGen')
 const setupCli = require('./src/utils/startProject')
 const migrate = require('./src/utils/migrate')
 const { setTokens, getTokens } = require('./src/utils/tokens')
+const generateMdDocs = require('./src/utils/docgen')
 
 yargs(hideBin(process.argv))
     .command('add-node [name]', 'Add a new node', (yargs) => {
@@ -65,10 +66,38 @@ yargs(hideBin(process.argv))
     .command('migrate', 'Migrate to new fix', (yargs) => yargs, (argv) => {
         migrate()
     })
-    .command('set-tokens', 'Set tokens for module as defined in manifest', (yargs) => yargs, (argv) => {
+    .command('set-tokens', 'Set tokens for module as defined in manifest', (yargs) => {
+        return yargs
+            .positional('runtime', {
+                description: 'Runtime ID of the runtime in which to insert tokens'
+            })
+    }, (argv) => {
         setTokens()
     })
-    .command('get-tokens', 'Get tokens currently set for module', (yargs) => yargs, (argv) => {
+    .command('get-tokens', 'Get tokens currently set for module', (yargs) => {
+        return yargs
+            .positional('runtime', {
+                description: 'Runtime ID of the runtime in which the module is present'
+            })
+            .option('module', {
+                description: 'The module for which you want to view tokens'
+            })
+    }, (argv) => {
         getTokens()
+    })
+    .command('gen-docs [target-dir]', 'Generate markdown docs from HTML docs of nodes', (yargs) => {
+        return yargs
+            .positional('target-dir', {
+                alias: 't',
+                type: 'string',
+                description: 'Path to directory where the new docs directory will be created'
+            })
+            .option('ignore-errors', {
+                alias: 'i',
+                type: 'boolean',
+                description: 'If true, files with invalid doc specs will be ignored'
+            })
+    }, (argv) => {
+        generateMdDocs(argv['target-dir'], argv['ignore-errors'])
     })
     .argv
