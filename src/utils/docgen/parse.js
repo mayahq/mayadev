@@ -88,6 +88,11 @@ function handleH3(h3node) {
     return `\n### ${h3node.innerText}`
 }
 
+function handleList(listNode) {
+    const mdList = NodeHtmlMarkdown.translate(listNode.innerHTML)
+    return `\n${mdList}`
+}
+
 /**
  * 
  * @param {HTMLParser.HTMLElement} dlNode 
@@ -124,6 +129,8 @@ function handleNode(node) {
         case 'H2': return handleH2(node)
         case 'H3': return handleH3(node)
         case 'DL': return handleDl(node)
+        case 'UL': return handleList(node)
+        case 'OL': return handleList(node)
         default: return ''
     }
 }
