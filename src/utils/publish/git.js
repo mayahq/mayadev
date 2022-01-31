@@ -63,10 +63,6 @@ class GitManager {
     }
 }
 
-const gm = new GitManager({
-    baseDir: '/Users/dushyant/maya/testmod-one'
-})
-
 // gm.getTags()
 //     .then(t => console.log(t))
 
