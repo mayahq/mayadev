@@ -138,7 +138,7 @@ yargs(hideBin(process.argv))
                 description: 'ID of module record in Maya database'
             })
     }, (argv) => {
-        console.log('argv:', argv)
-        // setOrigin(argv.id)
+        // console.log('argv:', argv)
+        setOrigin(argv.id)
     })
     .argv
