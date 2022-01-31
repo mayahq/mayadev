@@ -28,16 +28,15 @@ function getDownloadDetailsFromGitUrl(repoUrl) {
 
 
 async function getAddVersionPayload({ version }) {
-    const cleanVersion = `v${semver.clean(version)}`
-    // console.log('version:', version)
-    // console.log('VERSION:', semver.clean(version))
-
-    // const authToken = process.env.MAYA_CMS_TOKEN
-    const authToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjYxOGQyYjk2OWQ1ODYxZTNiZjI3ODE0OSIsImlhdCI6MTY0MzM1ODY0NCwiZXhwIjoxNjQ1OTUwNjQ0fQ.t5lDV7nejeMPSZUILHmVQexG92a84rYyfNrHqfBWWGw'
+    const tokenSpinner = ora('Verifying auth token presence').start()
+    const authToken = process.env.MAYA_CMS_TOKEN
     if (!authToken) {
-        console.log('Access token not found. Please set it in your environment. Aborting')
+        tokenSpinner.fail('Auth token not found. Please set MAYA_CMS_TOKEN in your environment variables')
         return
     }
+    tokenSpinner.succeed('Auth token present')
+    
+    const cleanVersion = `v${semver.clean(version)}`
 
     const packagePath = findPackagePath()
     const packageJson = getPackageDetails()
