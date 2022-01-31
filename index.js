@@ -7,6 +7,8 @@ const setupCli = require('./src/utils/startProject')
 const migrate = require('./src/utils/migrate')
 const { setTokens, getTokens } = require('./src/utils/tokens')
 const generateMdDocs = require('./src/utils/docgen')
+const addVersion = require('./src/utils/publish/addVersion')
+const setOrigin = require('./src/utils/publish/setOrigin')
 
 yargs(hideBin(process.argv))
     .command('add-node [name]', 'Add a new node', (yargs) => {
@@ -99,5 +101,24 @@ yargs(hideBin(process.argv))
             })
     }, (argv) => {
         generateMdDocs(argv['target-dir'], argv['ignore-errors'])
+    })
+    .command('add-version [vers]', 'Set which module record in Maya database this module corresponds to', (yargs) => {
+        return yargs
+            .positional('vers', {
+                type: 'string',
+                description: 'New version to be added'
+            })
+    }, (argv) => {
+        addVersion({ version: argv.vers })
+    })
+    .command('set-origin [id]', 'Set which module record in Maya database this module corresponds to', (yargs) => {
+        return yargs
+            .positional('id', {
+                type: 'string',
+                description: 'ID of module record in Maya database'
+            })
+    }, (argv) => {
+        console.log('argv:', argv)
+        // setOrigin(argv.id)
     })
     .argv
