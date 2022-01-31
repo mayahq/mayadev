@@ -9,6 +9,7 @@ const { setTokens, getTokens } = require('./src/utils/tokens')
 const generateMdDocs = require('./src/utils/docgen')
 const addVersion = require('./src/utils/publish/addVersion')
 const setOrigin = require('./src/utils/publish/setOrigin')
+const pushToVersion = require('./src/utils/publish/pushToVersion')
 
 yargs(hideBin(process.argv))
     .command('add-node [name]', 'Add a new node', (yargs) => {
@@ -110,6 +111,15 @@ yargs(hideBin(process.argv))
             })
     }, (argv) => {
         addVersion({ version: argv.vers })
+    })
+    .command('push [vers]', 'Push new module changes to current version', (yargs) => {
+        return yargs
+            .positional('vers', {
+                type: 'string',
+                description: 'New version to be added'
+            })
+    }, (argv) => {
+        pushToVersion({ version: argv.vers })
     })
     .command('set-origin [id]', 'Set which module record in Maya database this module corresponds to', (yargs) => {
         return yargs

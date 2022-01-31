@@ -134,6 +134,17 @@ async function addVersion({ version, message }) {
     const gm = new GitManager({
         baseDir: findPackagePath()
     })
+
+    // Don't let user do anything unless on master branch of the module repo
+    const branchSpinner = ora('Checking your branch').start()
+    const branch = await gm.getBranch()
+    if (branch.current !== 'master') {
+        branchSpinner.fail('You are not on master branch. Aborting.')
+        return
+    }
+    branchSpinner.succeed(`You're on master branch`)
+
+
     const tagName = `v${semver.clean(version)}`
     const spinner1 = ora(`Adding tag ${tagName} to repository.`).start()
 

@@ -28,10 +28,31 @@ class GitManager {
         })
     }
 
+    _deleteTagLocal(tagName) {
+        return new Promise((resolve, reject) => {
+            this.git.tag(['-d', tagName], (err, res) => {
+                if (err) reject(err)
+                else resolve(res)
+            })
+        })
+    }
+
+    getBranch() {
+        return new Promise((resolve, reject) => {
+            const data = this.git.branch()
+            resolve(data)
+        })
+    }
+
     async addTag(tagName) {
         await this._addTagLocal(tagName)
         // await this.git.push('--set-upstream', 'origin', 'master', '--follow-tags', '--tags')
         await this.git.pushTags('origin')
+    }
+
+    async deleteTag(tagName) {
+        await this.git.push(['--delete', 'origin', tagName])
+        await this._deleteTagLocal(tagName)
     }
 
     async commit(message) {
@@ -52,5 +73,13 @@ const gm = new GitManager({
 // gm.addTag('testTag6')
 //     .then((a) => console.log(a))
 //     .catch(e => console.log(e))
+
+// gm.commit()
+
+// gm.branch().then(res => console.log(res.current))
+
+// gm.deleteTag('testTag2')
+//     .then(res => console.log(res))
+//     .catch(err => console.log(err))
 
 module.exports = GitManager
