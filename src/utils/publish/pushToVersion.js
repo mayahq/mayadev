@@ -23,7 +23,7 @@ async function pushToVersion({ version, message }) {
     await gm.commit(message)
     commitSpinner.succeed('Successfully saved your work to repository')
 
-    const tagSpinner = ora(`Regenerating tag ${tagName}`)
+    const tagSpinner = ora(`Regenerating tag ${tagName}`).start()
     await gm.deleteTag(tagName)
     await gm.addTag(tagName)
     tagSpinner.succeed(`Tag ${tagName} regenerated. Push successful!`)

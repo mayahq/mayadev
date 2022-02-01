@@ -59,7 +59,7 @@ class GitManager {
         await this.git
             .add('.')
             .commit(message || 'Changes made')
-            .push('--set-upstream', 'origin', 'master')
+            .push(['--set-upstream', 'origin', 'master'])
     }
 }
 
