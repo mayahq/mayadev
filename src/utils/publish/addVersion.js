@@ -4,6 +4,7 @@ const axios = require('axios')
 const semver = require('semver')
 const GitUrlParse = require('git-url-parse')
 const ora = require('ora')
+const _ = require('lodash')
 
 const { getPackageDetails, findPackagePath } = require('../findPackagePath')
 const getModuleById = require('./getModule')
@@ -90,9 +91,16 @@ async function getAddVersionPayload({ version }) {
                 console.log(`Unable to get description for node ${name}. Check its docs.`)
             }
 
+            let slug
+            try {
+                slug = _.kebabCase(schema.name)
+            } catch (e) {
+                slug = schema.name
+            }
+
             data.nodes.push({
                 name: schema.label,
-                slug: schema.name,
+                slug: slug,
                 description: description
             })
         } catch (e) {
