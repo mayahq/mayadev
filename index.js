@@ -11,6 +11,7 @@ const addVersion = require('./src/utils/publish/addVersion')
 const setOrigin = require('./src/utils/publish/setOrigin')
 const pushToVersion = require('./src/utils/publish/pushToVersion')
 const setCurrentVersion = require('./src/utils/publish/setCurrentVersion')
+const { listRuntimes } = require('./src/utils/moduledev')
 
 yargs(hideBin(process.argv))
     .command('add-node [name]', 'Add a new node', (yargs) => {
@@ -140,5 +141,8 @@ yargs(hideBin(process.argv))
     }, (argv) => {
         // console.log('argv:', argv)
         setOrigin(argv.id)
+    })
+    .command('list runtimes', 'List runtimes with their IDs', (yargs) => yargs, (argv) => {
+        listRuntimes()
     })
     .argv
