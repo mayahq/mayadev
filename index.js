@@ -11,7 +11,7 @@ const addVersion = require('./src/utils/publish/addVersion')
 const setOrigin = require('./src/utils/publish/setOrigin')
 const pushToVersion = require('./src/utils/publish/pushToVersion')
 const setCurrentVersion = require('./src/utils/publish/setCurrentVersion')
-const { listRuntimes } = require('./src/utils/moduledev')
+const { listRuntimes, pushAllModulesToStore } = require('./src/utils/moduledev')
 
 yargs(hideBin(process.argv))
     .command('add-node [name]', 'Add a new node', (yargs) => {
@@ -122,6 +122,11 @@ yargs(hideBin(process.argv))
             })
     }, (argv) => {
         pushToVersion({ version: argv.vers })
+    })
+    .command('push-all', 'Push all modules in a directory to current version', (yargs) => {
+        return yargs
+    }, (argv) => {
+        pushAllModulesToStore()
     })
     .command('set-current-version [vers]', 'Push new module changes to current version', (yargs) => {
         return yargs
