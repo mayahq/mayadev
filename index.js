@@ -12,6 +12,7 @@ const setOrigin = require('./src/utils/publish/setOrigin')
 const pushToVersion = require('./src/utils/publish/pushToVersion')
 const setCurrentVersion = require('./src/utils/publish/setCurrentVersion')
 const { listRuntimes, pushAllModulesToStore } = require('./src/utils/moduledev')
+const generateNodesFromSpec = require('./src/utils/openapi')
 
 yargs(hideBin(process.argv))
     .command('add-node [name]', 'Add a new node', (yargs) => {
@@ -149,5 +150,29 @@ yargs(hideBin(process.argv))
     })
     .command('list runtimes', 'List runtimes with their IDs', (yargs) => yargs, (argv) => {
         listRuntimes()
+    })
+    .command('gen-nodes', 'Generate module-sdk code from another spec', (yargs) => {
+        return yargs
+            .option('spec-type', {
+                alias: 's',
+                type: 'string',
+                description: 'Specification type'
+            })
+            .option('spec-path', {
+                alias: 'p',
+                type: 'string',
+                description: 'Path to spec file'
+            })
+            .option('output-path', {
+                alias: 'o',
+                type: 'string',
+                description: 'Path to output directory'
+            })
+    }, (argv) => {
+        generateNodesFromSpec({
+            specType: argv['spec-type'],
+            specPath: argv['spec-path'],
+            outputPath: argv['output-path']
+        })
     })
     .argv

@@ -1,4 +1,5 @@
 const { Node, Schema, fields } = require("@mayahq/module-sdk");
+const axios = require("../../util/axios"); // Define your axios instance in the utils folder
 
 class Session extends Node {
     constructor(node, RED, opts) {
@@ -120,7 +121,7 @@ class Session extends Node {
 
         if ((vals.action.selected = "new_session")) {
             requestConfig = {
-                url: "/api/v1/session/new",
+                url: `/api/v1/session/new`,
                 method: "post",
                 data: {},
             };
@@ -128,7 +129,7 @@ class Session extends Node {
 
         if ((vals.action.selected = "get_session")) {
             requestConfig = {
-                url: "/api/v1/session/{session_id}",
+                url: `/api/v1/session/${vals.action.childValues.session_id_1}`,
                 method: "get",
                 data: {},
             };
@@ -136,7 +137,7 @@ class Session extends Node {
 
         if ((vals.action.selected = "delete_session")) {
             requestConfig = {
-                url: "/api/v1/session/{session_id}",
+                url: `/api/v1/session/${vals.action.childValues.session_id_2}`,
                 method: "delete",
                 data: {},
             };
@@ -144,7 +145,7 @@ class Session extends Node {
 
         if ((vals.action.selected = "list_sessions")) {
             requestConfig = {
-                url: "/api/v1/sessions",
+                url: `/api/v1/sessions`,
                 method: "get",
                 data: {},
             };
@@ -152,7 +153,7 @@ class Session extends Node {
 
         if ((vals.action.selected = "add_step")) {
             requestConfig = {
-                url: "/api/v1/session/step/add",
+                url: `/api/v1/session/step/add`,
                 method: "post",
                 data: {
                     session_id: vals.action.childValues.session_id_4,
@@ -164,7 +165,7 @@ class Session extends Node {
 
         if ((vals.action.selected = "delete_step")) {
             requestConfig = {
-                url: "/api/v1/session/step/delete",
+                url: `/api/v1/session/step/delete`,
                 method: "delete",
                 data: {
                     session_id: vals.action.childValues.session_id_5,
@@ -175,7 +176,7 @@ class Session extends Node {
 
         if ((vals.action.selected = "clear_session")) {
             requestConfig = {
-                url: "/api/v1/session/clear",
+                url: `/api/v1/session/clear`,
                 method: "post",
                 data: {
                     session_id: vals.action.childValues.session_id_6,
@@ -187,7 +188,7 @@ class Session extends Node {
 
         if ((vals.action.selected = "session_undo")) {
             requestConfig = {
-                url: "/api/v1/session/undo",
+                url: `/api/v1/session/undo`,
                 method: "post",
                 data: {},
             };
@@ -195,7 +196,7 @@ class Session extends Node {
 
         if ((vals.action.selected = "session_undo")) {
             requestConfig = {
-                url: "/api/v1/session/redo",
+                url: `/api/v1/session/redo`,
                 method: "post",
                 data: {},
             };
@@ -203,7 +204,7 @@ class Session extends Node {
 
         if ((vals.action.selected = "session_deploy")) {
             requestConfig = {
-                url: "/api/v1/session/deploy",
+                url: `/api/v1/session/deploy`,
                 method: "post",
                 data: {},
             };
@@ -223,3 +224,5 @@ class Session extends Node {
         return msg;
     }
 }
+
+module.exports = Session;

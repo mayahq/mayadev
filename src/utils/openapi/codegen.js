@@ -61,14 +61,19 @@ function generateCodeSnippetsForAction(action) {
     `
 
     let url = action.path
-    action.params && Object.keys(action.params).forEach((paramName) => {
-        url.replace(`{${paramName}}`, `\${vals.action.childValues${paramName}_${action.id}}`)
-    })
+    if (action.params && Object.keys(action.params).length > 0) {
+        // console.log('params found', action.path, action.params)
+        Object.keys(action.params).forEach((paramName) => {
+            // console.log('param name', paramName)
+            url = url.replace(`{${paramName}}`, `\${vals.action.childValues.${paramName}_${action.id}}`)
+            // console.log('new url', url)
+        })
+    }
 
     const actionCode = `
         if (vals.action.selected = "${_.snakeCase(action.summary)}") {
             requestConfig = {
-                url: "${url}",
+                url: \`${url}\`,
                 method: "${action.method}",
                 data: {
                     ${action.requestBody === undefined ? '' : Object.keys(action.requestBody).map((fieldName) => (
@@ -134,13 +139,14 @@ function generateOnMessageCode(nodeApiSpec) {
  * @param {string} path Path where the folder containing node code will be saved 
  * @param {import('./types').NodeApiSpec} nodeApiSpec Spec for the node
  */
- function generateNodeCodeForEndpoint(nodeApiSpec) {
+ function generateSchemaFileCodeForEndpoint(nodeApiSpec) {
     const code = `
         const {
             Node,
             Schema,
             fields
         } = require('@mayahq/module-sdk')
+        const axios = require('../../util/axios') // Define your axios instance in the utils folder
 
         class ${_.startCase(nodeApiSpec.name).replace(/ /g, '')} extends Node {
             constructor(node, RED, opts) {
@@ -165,6 +171,8 @@ function generateOnMessageCode(nodeApiSpec) {
                 ${generateOnMessageCode(nodeApiSpec)}
             }
         }
+
+        module.exports = ${_.startCase(nodeApiSpec.name).replace(/ /g, '')}
     `
 
     // return beautify(dedent(code), {
@@ -179,10 +187,31 @@ function generateOnMessageCode(nodeApiSpec) {
     // return dedent(code)
 }
 
+function generateNodeFileCodeForEndpoint(packageName, nodeApiSpec) {
+    const code = `
+    const NodeClass = require('./${_.camelCase(nodeApiSpec.name)}.schema')
+    const {
+        nodefn
+    } = require('@mayahq/module-sdk')
+
+    module.exports = nodefn(NodeClass, "${packageName}")
+    `
+
+    return prettier.format(code, { 
+        parser: 'babel',
+        tabWidth: 4
+    })
+}
+
 const openApiSpec = require(path.join(__dirname, 'test.json'))
 const spec = generateModuleSdkSpec(openApiSpec)
 // const fields = generateFields(spec[0])
 
-const code = generateNodeCodeForEndpoint(spec[0])
+const code = generateSchemaFileCodeForEndpoint(spec[0])
 
 fs.writeFileSync(path.join(__dirname, 'test.js'), code)
+
+module.exports = {
+    generateNodeFileCodeForEndpoint,
+    generateSchemaFileCodeForEndpoint
+}
