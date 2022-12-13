@@ -168,11 +168,17 @@ yargs(hideBin(process.argv))
                 type: 'string',
                 description: 'Path to output directory'
             })
+            .option('category', {
+                alias: 'c',
+                type: 'string',
+                description: 'Base category of the all generated nodes'
+            })
     }, (argv) => {
         generateNodesFromSpec({
             specType: argv['spec-type'],
             specPath: argv['spec-path'],
-            outputPath: argv['output-path']
+            outputPath: argv['output-path'],
+            category: argv['category'],
         })
     })
     .argv

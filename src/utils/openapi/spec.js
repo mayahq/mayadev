@@ -28,9 +28,12 @@ function generateModuleSdkSpec(openApiSpec) {
     })
 
     /**
-     * @type {import('./types').NodeApiSpec[]}
+     * @type {import('./types').ModuleSpec[]}
      */
-    const specs = []
+    const spec = {
+        baseUrl: '',
+        endpoints: []
+    }
 
     Object.keys(groups).forEach((nodeName) => {
         actions = groups[nodeName]
@@ -51,7 +54,8 @@ function generateModuleSdkSpec(openApiSpec) {
                 path: action.path,
                 method: action.method,
                 summary: action.methodSpec.summary,
-                id: idx
+                id: idx,
+                requiresAuth: !!action.methodSpec.security
             }
 
             const openApiRequestBody = action.methodSpec.requestBody
@@ -107,13 +111,29 @@ function generateModuleSdkSpec(openApiSpec) {
             nodeApiSpec.actions.push(nodeApiActionSpec)
         })
 
-        specs.push(nodeApiSpec)
+        spec.endpoints.push(nodeApiSpec)
     })
 
-    return specs
+
+    const servers = openApiSpec.servers
+    if (servers) {
+        let url = 'http://localhost:8000'
+        const productionServer = servers.find(server => server.description.includes('production'))
+        if (!productionServer && servers.length > 0) {
+            url = servers[0].url
+        } else {
+            url = productionServer.url
+        }
+
+        spec.baseUrl = url
+    }
+
+
+    return spec
 }
 
-const openApiSpec = require(path.join(__dirname, 'test.json'))
-const specs = generateModuleSdkSpec(openApiSpec)
+// const openApiSpec = require(path.join(__dirname, 'test.json'))
+// const specs = generateModuleSdkSpec(openApiSpec)
+// console.log(JSON.stringify(specs, null, 2))
 
 module.exports = generateModuleSdkSpec

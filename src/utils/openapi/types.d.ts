@@ -16,6 +16,7 @@ export type NodeApiActionSpec = {
     requestBody: RequestBody;
     params: RequestBody;
     id: number;
+    requiresAuth: boolean;
 }
 
 export type NodeApiSpec = {
@@ -23,4 +24,9 @@ export type NodeApiSpec = {
     actions: {
         [key: string]: NodeApiActionSpec;
     }
+}
+
+export type ModuleSpec = {
+    baseUrl: string;
+    endpoints: NodeApiSpec[]
 }

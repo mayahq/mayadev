@@ -7,14 +7,10 @@ const prettier = require('prettier')
 const generateModuleSdkSpec = require('./spec')
 
 /**
- * 1. The first tag of an endpoint will be used to group the node
- */
-
-/**
  * @param {string} name name of field
  * @param {import('./types').RequestBodyField} fieldsSpec 
  */
-function generateTypedFieldCode(id, name, fieldsSpec) {
+ function generateTypedFieldCode(name, fieldsSpec) {
     const nodeRedTypes = ['msg', 'flow', 'global']
     let defaultType = 'str'
 
@@ -37,7 +33,7 @@ function generateTypedFieldCode(id, name, fieldsSpec) {
     }
 
     return `
-        ${name}_${id}: new fields.Typed({
+        ${name}: new fields.Typed({
             type: "${defaultType}",
             allowedTypes: ${JSON.stringify(nodeRedTypes)},
             defaultVal: "abc",
@@ -48,107 +44,94 @@ function generateTypedFieldCode(id, name, fieldsSpec) {
 
 /**
  * 
- * @param {import('./types').NodeApiActionSpec} action 
+ * @param {import('./types').NodeApiActionSpec} nodeApiActionSpec 
  */
-function generateCodeSnippetsForAction(action) {
+function generateFieldCode(nodeApiActionSpec) {
     const fieldsCode = `
-        ${action.requestBody === undefined ? '' : Object.keys(action.requestBody).map((fieldName) => (
-            generateTypedFieldCode(action.id, fieldName, action.requestBody[fieldName])
+        ${nodeApiActionSpec.requestBody === undefined ? '' : Object.keys(nodeApiActionSpec.requestBody).map((fieldName) => (
+            generateTypedFieldCode(fieldName, nodeApiActionSpec.requestBody[fieldName])
         )).join('\n')}
-        ${action.params === undefined ? '' : Object.keys(action.params).map((fieldName) => (
-            generateTypedFieldCode(action.id, fieldName, action.params[fieldName])
+        ${nodeApiActionSpec.params === undefined ? '' : Object.keys(nodeApiActionSpec.params).map((fieldName) => (
+            generateTypedFieldCode(fieldName, nodeApiActionSpec.params[fieldName])
         )).join('\n')}
     `
+    return fieldsCode
+}
 
+/**
+ * 
+ * @param {import('./types').NodeApiActionSpec} action 
+ */
+function generateActionCode(action, useAuth = false) {
     let url = action.path
     if (action.params && Object.keys(action.params).length > 0) {
-        // console.log('params found', action.path, action.params)
         Object.keys(action.params).forEach((paramName) => {
-            // console.log('param name', paramName)
-            url = url.replace(`{${paramName}}`, `\${vals.action.childValues.${paramName}_${action.id}}`)
-            // console.log('new url', url)
+            url = url.replace(`{${paramName}}`, `\${vals.${paramName}}`)
         })
     }
 
     const actionCode = `
-        if (vals.action.selected = "${_.snakeCase(action.summary)}") {
-            requestConfig = {
-                url: \`${url}\`,
-                method: "${action.method}",
-                data: {
-                    ${action.requestBody === undefined ? '' : Object.keys(action.requestBody).map((fieldName) => (
-                        `${fieldName}: vals.action.childValues.${fieldName}_${action.id},`
-                    )).join('\n')}
-                }
+        this.setStatus('PROGRESS', 'Processing...')
+
+        const request = {
+            url: \`${url}\`,
+            method: '${action.method}',
+            data: {
+                ${action.requestBody === undefined ? '' : Object.keys(action.requestBody).map((fieldName) => (
+                    `${fieldName}: vals.${fieldName},`
+                )).join('\n')}
+            },
+            ${
+                useAuth ? `
+                headers: {
+                    Authorization: \`Bearer \${this.credentials.auth.key}\`
+                }` : ''
             }
         }
-    `
-
-    return { fieldsCode, actionCode }
-}
-
-/**
- * 
- * @param {import('./types').NodeApiSpec} nodeApiSpec 
- */
-function generateFields(nodeApiSpec) {
-    const optionNameMap = {}
-    nodeApiSpec.actions.forEach((action) => {
-        optionNameMap[_.snakeCase(action.summary)] = action.summary
-    })
-
-    const fields = `
-        action: new fields.SelectFieldSet({
-            optionNameMap: ${JSON.stringify(optionNameMap)},
-            fieldSets: {\
-                ${nodeApiSpec.actions.map((action) => {
-                    return `${_.snakeCase(action.summary)}: {
-                        ${generateCodeSnippetsForAction(action).fieldsCode}
-                    }`
-                })}
-            }
-        }),
-    `
-
-    return fields
-}
-
-function generateOnMessageCode(nodeApiSpec) {
-    return `
-        this.setStatus('PROGRESS', 'Making request...')
-        let requestConfig = {}
-
-        ${nodeApiSpec.actions.map((action) => {
-            return generateCodeSnippetsForAction(action).actionCode
-        }).join('\n')}
 
         try {
-            const response = await axios(requestConfig)
+            const response = await axios(request)
             msg.payload = response.data
             this.setStatus('SUCCESS', 'Done')
         } catch (e) {
-            console.log('There was an error making the request:', e)
-            this.setStatus('ERROR', 'There was an error making the request:' + e.toString())
+            this.setStatus('ERROR', 'Error:' + e.toString())
+            msg.__isError = true
+            msg.__error = e
         }
+
         return msg
     `
+
+    return actionCode
 }
 
 /**
  * 
- * @param {string} path Path where the folder containing node code will be saved 
- * @param {import('./types').NodeApiSpec} nodeApiSpec Spec for the node
+ * @param {import('./types').NodeApiActionSpec} nodeApiActionSpec 
  */
- function generateSchemaFileCodeForEndpoint(nodeApiSpec) {
-    const code = `
-        const {
-            Node,
-            Schema,
-            fields
-        } = require('@mayahq/module-sdk')
-        const axios = require('../../util/axios') // Define your axios instance in the utils folder
+function generateSchemaFileCodeForEndpoint(category, nodeApiActionSpec, packageName) {
+    const authNodeCamelCase = `${_.camelCase(packageName)}Auth`
+    const authNodePascalCase = `${_.startCase(packageName).replace(/ /g, '')}Auth`
 
-        class ${_.startCase(nodeApiSpec.name).replace(/ /g, '')} extends Node {
+    const useAuth = nodeApiActionSpec.requiresAuth
+
+    let url = nodeApiActionSpec.path
+    if (nodeApiActionSpec.params && Object.keys(nodeApiActionSpec.params).length > 0) {
+        Object.keys(nodeApiActionSpec.params).forEach((paramName) => {
+            url = url.replace(`{${paramName}}`, `\${vals.${paramName}}`)
+        })
+    }
+
+    const nodeCode = `
+        const { Node, Schema, fields } = require("@mayahq/module-sdk");
+        const axios = require('../../util/axios')
+        ${
+            useAuth ? `
+                const ${authNodePascalCase} = require('../${authNodeCamelCase}/${authNodeCamelCase}.schema')
+            ` : ''
+        }
+
+        class ${_.startCase(nodeApiActionSpec.summary).replace(/ /g, '')} extends Node {
             constructor(node, RED, opts) {
                 super(node, RED, {
                     ...opts,
@@ -157,61 +140,145 @@ function generateOnMessageCode(nodeApiSpec) {
             }
 
             static schema = new Schema({
-                name: '${_.kebabCase(nodeApiSpec.name)}',
-                label: '${_.startCase(nodeApiSpec.name)}',
-                category: 'Maya',
+                name: '${_.kebabCase(nodeApiActionSpec.summary)}',
+                label: '${_.startCase(nodeApiActionSpec.summary)}',
+                category: '${category}',
                 isConfig: false,
                 fields: {
-                    ${generateFields(nodeApiSpec)}
+                    ${useAuth ? `
+                        auth: new fields.ConfigNode({ type: ${authNodePascalCase}, displayName: 'Auth' }),
+                    ` : ''}
+                    ${nodeApiActionSpec.requestBody === undefined ? '' : Object.keys(nodeApiActionSpec.requestBody).map((fieldName) => (
+                        generateTypedFieldCode(fieldName, nodeApiActionSpec.requestBody[fieldName])
+                    )).join('\n')}
+                    ${nodeApiActionSpec.params === undefined ? '' : Object.keys(nodeApiActionSpec.params).map((fieldName) => (
+                        generateTypedFieldCode(fieldName, nodeApiActionSpec.params[fieldName])
+                    )).join('\n')}
                 },
                 color: '#37B954'
             })
 
             async onMessage(msg, vals) {
-                ${generateOnMessageCode(nodeApiSpec)}
+                this.setStatus('PROGRESS', 'Processing...')
+
+                const request = {
+                    url: \`${url}\`,
+                    method: '${nodeApiActionSpec.method}',
+                    data: {
+                        ${nodeApiActionSpec.requestBody === undefined ? '' : Object.keys(nodeApiActionSpec.requestBody).map((fieldName) => (
+                            `${fieldName}: vals.${fieldName},`
+                        )).join('\n')}
+                    },
+                    ${
+                        useAuth ? `
+                        headers: {
+                            Authorization: \`Bearer \${this.credentials.auth.key}\`
+                        }` : ''
+                    }
+                }
+
+                try {
+                    const response = await axios(request)
+                    msg.payload = response.data
+                    this.setStatus('SUCCESS', 'Done')
+                } catch (e) {
+                    this.setStatus('ERROR', 'Error:' + e.toString())
+                    msg.__isError = true
+                    msg.__error = e
+                }
+
+                return msg
             }
         }
 
-        module.exports = ${_.startCase(nodeApiSpec.name).replace(/ /g, '')}
+        module.exports = ${_.startCase(nodeApiActionSpec.summary).replace(/ /g, '')}
     `
 
-    // return beautify(dedent(code), {
-    //     indent_size: 4, space_in_empty_paren: true
-    // })
-
-    return prettier.format(code, { 
+    return prettier.format(nodeCode, { 
         parser: 'babel',
         tabWidth: 4
     })
-
-    // return dedent(code)
 }
 
-function generateNodeFileCodeForEndpoint(packageName, nodeApiSpec) {
+function generateNodeFileCodeForEndpoint(packageName, nodeApiActionSpec) {
     const code = `
-    const NodeClass = require('./${_.camelCase(nodeApiSpec.name)}.schema')
-    const {
-        nodefn
-    } = require('@mayahq/module-sdk')
+        const NodeClass = require('./${_.camelCase(nodeApiActionSpec.summary)}.schema')
+        const {
+            nodefn
+        } = require('@mayahq/module-sdk')
 
-    module.exports = nodefn(NodeClass, "${packageName}")
+        module.exports = nodefn(NodeClass, "${packageName}")
     `
 
-    return prettier.format(code, { 
+    return prettier.format(code, {
         parser: 'babel',
         tabWidth: 4
     })
 }
 
-const openApiSpec = require(path.join(__dirname, 'test.json'))
-const spec = generateModuleSdkSpec(openApiSpec)
-// const fields = generateFields(spec[0])
+function createAxiosInstanceFile(baseUrl) {
+    const code = `
+        const axios = require('axios')
 
-const code = generateSchemaFileCodeForEndpoint(spec[0])
+        module.exports = axios.create({
+            baseURL: '${baseUrl}'
+        })
+    `
 
-fs.writeFileSync(path.join(__dirname, 'test.js'), code)
+    return prettier.format(code, {
+        parser: 'babel',
+        tabWidth: 4
+    })
+}
+
+function generateAuthConfigNodeCodeForEndpoint(moduleName) {
+    const code = `
+        const {
+            Node,
+            Schema,
+            fields
+        } = require('@mayahq/module-sdk')
+
+        class ${_.startCase(moduleName).replaceAll(' ', '')}Auth extends Node {
+            constructor(node, RED, opts) {
+                super(node, RED, {
+                    ...opts,
+                })
+            }
+        
+            static schema = new Schema({
+                name: '${_.kebabCase(moduleName)}-auth',
+                label: '${_.startCase(moduleName)} :: Auth',
+                category: 'config',
+                isConfig: true,
+                fields: {},
+                redOpts: {
+                    credentials: {
+                        key: new fields.Credential({ type: "str", password: true }),
+                    }
+                }
+        
+            })
+        
+            async onMessage(msg, vals) {}
+        }
+        
+        module.exports = ${_.startCase(moduleName).replaceAll(' ', '')}Auth`
+
+    return prettier.format(code, {
+        parser: 'babel',
+        tabWidth: 4
+    })
+}
+
+// const openApiSpec = require(path.join(__dirname, 'test.json'))
+// const spec = generateModuleSdkSpec(openApiSpec)
+// const nodeCode = generateNode(`Maya :: ${spec[0].name}`, spec[0].actions[4])
+// fs.writeFileSync(path.join(__dirname, 'test.js'), nodeCode)
 
 module.exports = {
+    generateSchemaFileCodeForEndpoint,
     generateNodeFileCodeForEndpoint,
-    generateSchemaFileCodeForEndpoint
+    createAxiosInstanceFile,
+    generateAuthConfigNodeCodeForEndpoint
 }

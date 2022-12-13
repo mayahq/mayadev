@@ -1,289 +1,319 @@
-[
-  {
-    "name": "session",
-    "actions": [
-      {
-        "path": "/api/v1/session/new",
-        "method": "post",
-        "summary": "New Session",
-        "id": 0
-      },
-      {
-        "path": "/api/v1/session/{session_id}",
-        "method": "get",
-        "summary": "Get Session",
-        "id": 1,
-        "params": {
-          "session_id": {
-            "title": "Session Id",
-            "type": "string"
+{
+  "baseUrl": "",
+  "endpoints": [
+    {
+      "name": "session",
+      "actions": [
+        {
+          "path": "/api/v1/session/new",
+          "method": "post",
+          "summary": "New Session",
+          "id": 0,
+          "requiresAuth": true
+        },
+        {
+          "path": "/api/v1/session/{session_id}",
+          "method": "get",
+          "summary": "Get Session",
+          "id": 1,
+          "requiresAuth": true,
+          "params": {
+            "session_id": {
+              "title": "Session Id",
+              "type": "string"
+            }
+          }
+        },
+        {
+          "path": "/api/v1/session/{session_id}",
+          "method": "delete",
+          "summary": "Delete Session",
+          "id": 2,
+          "requiresAuth": true,
+          "params": {
+            "session_id": {
+              "title": "Session Id",
+              "type": "string"
+            }
+          }
+        },
+        {
+          "path": "/api/v1/sessions",
+          "method": "get",
+          "summary": "List Sessions",
+          "id": 3,
+          "requiresAuth": true
+        },
+        {
+          "path": "/api/v1/session/step/add",
+          "method": "post",
+          "summary": "Add Step",
+          "id": 4,
+          "requiresAuth": true,
+          "requestBody": {
+            "session_id": {
+              "title": "Session Id",
+              "type": "string"
+            },
+            "step_prompt": {
+              "title": "Step Prompt",
+              "type": "string"
+            },
+            "position": {
+              "title": "Position",
+              "type": "integer"
+            }
+          }
+        },
+        {
+          "path": "/api/v1/session/step/delete",
+          "method": "delete",
+          "summary": "Delete Step",
+          "id": 5,
+          "requiresAuth": true,
+          "requestBody": {
+            "session_id": {
+              "title": "Session Id",
+              "type": "string"
+            },
+            "step_id": {
+              "title": "Step Id",
+              "type": "string"
+            }
+          }
+        },
+        {
+          "path": "/api/v1/session/clear",
+          "method": "post",
+          "summary": "Clear Session",
+          "id": 6,
+          "requiresAuth": true,
+          "requestBody": {
+            "session_id": {
+              "title": "Session Id",
+              "type": "string"
+            },
+            "instruction": {
+              "title": "Instruction",
+              "type": "string"
+            },
+            "from_scratch": {
+              "title": "From Scratch",
+              "type": "boolean"
+            }
+          }
+        },
+        {
+          "path": "/api/v1/session/undo",
+          "method": "post",
+          "summary": "Session Undo",
+          "id": 7,
+          "requiresAuth": false
+        },
+        {
+          "path": "/api/v1/session/redo",
+          "method": "post",
+          "summary": "Session Undo",
+          "id": 8,
+          "requiresAuth": false
+        },
+        {
+          "path": "/api/v1/session/deploy",
+          "method": "post",
+          "summary": "Session Deploy",
+          "id": 9,
+          "requiresAuth": false
+        }
+      ]
+    },
+    {
+      "name": "recipe",
+      "actions": [
+        {
+          "path": "/api/v1/library/recipe/new",
+          "method": "post",
+          "summary": "Add Recipe",
+          "id": 0,
+          "requiresAuth": false
+        },
+        {
+          "path": "/api/v1/library/recipe/{recipeId}",
+          "method": "get",
+          "summary": "Get Recipe",
+          "id": 1,
+          "requiresAuth": false,
+          "params": {
+            "recipeId": {
+              "title": "Recipeid"
+            }
+          }
+        },
+        {
+          "path": "/api/v1/library/recipe/{recipeId}",
+          "method": "delete",
+          "summary": "Delete Recipe",
+          "id": 2,
+          "requiresAuth": false,
+          "params": {
+            "recipeId": {
+              "title": "Recipeid"
+            }
+          }
+        },
+        {
+          "path": "/library/recipe/{recipeId}",
+          "method": "put",
+          "summary": "Update Recipe",
+          "id": 3,
+          "requiresAuth": false,
+          "params": {
+            "recipeId": {
+              "title": "Recipeid"
+            }
+          }
+        },
+        {
+          "path": "/api/v1/library/recipes",
+          "method": "get",
+          "summary": "List Recipes",
+          "id": 4,
+          "requiresAuth": true
+        },
+        {
+          "path": "/api/v1/library/recipe/teach",
+          "method": "post",
+          "summary": "Teach Recipe",
+          "id": 5,
+          "requiresAuth": true,
+          "requestBody": {
+            "request_body": {
+              "$ref": "#/components/schemas/RecipeRequest"
+            }
           }
         }
-      },
-      {
-        "path": "/api/v1/session/{session_id}",
-        "method": "delete",
-        "summary": "Delete Session",
-        "id": 2,
-        "params": {
-          "session_id": {
-            "title": "Session Id",
-            "type": "string"
+      ]
+    },
+    {
+      "name": "step",
+      "actions": [
+        {
+          "path": "/api/v1/library/step/new",
+          "method": "post",
+          "summary": "Add Step",
+          "id": 0,
+          "requiresAuth": false
+        },
+        {
+          "path": "/api/v1/library/step/{stepId}",
+          "method": "get",
+          "summary": "Get Step",
+          "id": 1,
+          "requiresAuth": false,
+          "params": {
+            "stepId": {
+              "title": "Stepid"
+            }
+          }
+        },
+        {
+          "path": "/api/v1/library/step/{stepId}",
+          "method": "put",
+          "summary": "Update Step",
+          "id": 2,
+          "requiresAuth": false,
+          "params": {
+            "stepId": {
+              "title": "Stepid"
+            }
+          }
+        },
+        {
+          "path": "/api/v1/library/step/{stepId}",
+          "method": "delete",
+          "summary": "Delete Step",
+          "id": 3,
+          "requiresAuth": false,
+          "params": {
+            "stepId": {
+              "title": "Stepid"
+            }
+          }
+        },
+        {
+          "path": "/api/v1/library/steps",
+          "method": "get",
+          "summary": "List Steps",
+          "id": 4,
+          "requiresAuth": true
+        },
+        {
+          "path": "/api/v1/library/step/teach",
+          "method": "post",
+          "summary": "Teach Step",
+          "id": 5,
+          "requiresAuth": true,
+          "requestBody": {
+            "request_body": {
+              "$ref": "#/components/schemas/TeachStepSubflowRequest"
+            }
           }
         }
-      },
-      {
-        "path": "/api/v1/sessions",
-        "method": "get",
-        "summary": "List Sessions",
-        "id": 3
-      },
-      {
-        "path": "/api/v1/session/step/add",
-        "method": "post",
-        "summary": "Add Step",
-        "id": 4,
-        "requestBody": {
-          "session_id": {
-            "title": "Session Id",
-            "type": "string"
-          },
-          "step_prompt": {
-            "title": "Step Prompt",
-            "type": "string"
-          },
-          "position": {
-            "title": "Position",
-            "type": "integer"
+      ]
+    },
+    {
+      "name": "runtime",
+      "actions": [
+        {
+          "path": "/api/v1/library/runtime/new",
+          "method": "post",
+          "summary": "Create Runtime",
+          "id": 0,
+          "requiresAuth": true
+        },
+        {
+          "path": "/api/v1/library/runtime/{runtimeId}",
+          "method": "get",
+          "summary": "Get Runtime",
+          "id": 1,
+          "requiresAuth": true,
+          "params": {
+            "runtimeId": {
+              "title": "Runtimeid"
+            }
           }
-        }
-      },
-      {
-        "path": "/api/v1/session/step/delete",
-        "method": "delete",
-        "summary": "Delete Step",
-        "id": 5,
-        "requestBody": {
-          "session_id": {
-            "title": "Session Id",
-            "type": "string"
-          },
-          "step_id": {
-            "title": "Step Id",
-            "type": "string"
+        },
+        {
+          "path": "/api/v1/library/runtime/{runtimeId}",
+          "method": "delete",
+          "summary": "Delete Runtime",
+          "id": 2,
+          "requiresAuth": true,
+          "params": {
+            "runtimeId": {
+              "title": "Runtimeid"
+            }
           }
+        },
+        {
+          "path": "/api/v1/library/runtimes",
+          "method": "get",
+          "summary": "List Runtime",
+          "id": 3,
+          "requiresAuth": true
         }
-      },
-      {
-        "path": "/api/v1/session/clear",
-        "method": "post",
-        "summary": "Clear Session",
-        "id": 6,
-        "requestBody": {
-          "session_id": {
-            "title": "Session Id",
-            "type": "string"
-          },
-          "instruction": {
-            "title": "Instruction",
-            "type": "string"
-          },
-          "from_scratch": {
-            "title": "From Scratch",
-            "type": "boolean"
-          }
+      ]
+    },
+    {
+      "name": "health",
+      "actions": [
+        {
+          "path": "/health",
+          "method": "get",
+          "summary": "Health Check",
+          "id": 0,
+          "requiresAuth": false
         }
-      },
-      {
-        "path": "/api/v1/session/undo",
-        "method": "post",
-        "summary": "Session Undo",
-        "id": 7
-      },
-      {
-        "path": "/api/v1/session/redo",
-        "method": "post",
-        "summary": "Session Undo",
-        "id": 8
-      },
-      {
-        "path": "/api/v1/session/deploy",
-        "method": "post",
-        "summary": "Session Deploy",
-        "id": 9
-      }
-    ]
-  },
-  {
-    "name": "recipe",
-    "actions": [
-      {
-        "path": "/api/v1/library/recipe/new",
-        "method": "post",
-        "summary": "Add Recipe",
-        "id": 0
-      },
-      {
-        "path": "/api/v1/library/recipe/{recipeId}",
-        "method": "get",
-        "summary": "Get Recipe",
-        "id": 1,
-        "params": {
-          "recipeId": {
-            "title": "Recipeid"
-          }
-        }
-      },
-      {
-        "path": "/api/v1/library/recipe/{recipeId}",
-        "method": "delete",
-        "summary": "Delete Recipe",
-        "id": 2,
-        "params": {
-          "recipeId": {
-            "title": "Recipeid"
-          }
-        }
-      },
-      {
-        "path": "/library/recipe/{recipeId}",
-        "method": "put",
-        "summary": "Update Recipe",
-        "id": 3,
-        "params": {
-          "recipeId": {
-            "title": "Recipeid"
-          }
-        }
-      },
-      {
-        "path": "/api/v1/library/recipes",
-        "method": "get",
-        "summary": "List Recipes",
-        "id": 4
-      },
-      {
-        "path": "/api/v1/library/recipe/teach",
-        "method": "post",
-        "summary": "Teach Recipe",
-        "id": 5,
-        "requestBody": {
-          "request_body": {
-            "$ref": "#/components/schemas/RecipeRequest"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "name": "step",
-    "actions": [
-      {
-        "path": "/api/v1/library/step/new",
-        "method": "post",
-        "summary": "Add Step",
-        "id": 0
-      },
-      {
-        "path": "/api/v1/library/step/{stepId}",
-        "method": "get",
-        "summary": "Get Step",
-        "id": 1,
-        "params": {
-          "stepId": {
-            "title": "Stepid"
-          }
-        }
-      },
-      {
-        "path": "/api/v1/library/step/{stepId}",
-        "method": "put",
-        "summary": "Update Step",
-        "id": 2,
-        "params": {
-          "stepId": {
-            "title": "Stepid"
-          }
-        }
-      },
-      {
-        "path": "/api/v1/library/step/{stepId}",
-        "method": "delete",
-        "summary": "Delete Step",
-        "id": 3,
-        "params": {
-          "stepId": {
-            "title": "Stepid"
-          }
-        }
-      },
-      {
-        "path": "/api/v1/library/steps",
-        "method": "get",
-        "summary": "List Steps",
-        "id": 4
-      },
-      {
-        "path": "/api/v1/library/step/teach",
-        "method": "post",
-        "summary": "Teach Step",
-        "id": 5,
-        "requestBody": {
-          "request_body": {
-            "$ref": "#/components/schemas/TeachStepSubflowRequest"
-          }
-        }
-      }
-    ]
-  },
-  {
-    "name": "runtime",
-    "actions": [
-      {
-        "path": "/api/v1/library/runtime/new",
-        "method": "post",
-        "summary": "Create Runtime",
-        "id": 0
-      },
-      {
-        "path": "/api/v1/library/runtime/{runtimeId}",
-        "method": "get",
-        "summary": "Get Runtime",
-        "id": 1,
-        "params": {
-          "runtimeId": {
-            "title": "Runtimeid"
-          }
-        }
-      },
-      {
-        "path": "/api/v1/library/runtime/{runtimeId}",
-        "method": "delete",
-        "summary": "Delete Runtime",
-        "id": 2,
-        "params": {
-          "runtimeId": {
-            "title": "Runtimeid"
-          }
-        }
-      },
-      {
-        "path": "/api/v1/library/runtimes",
-        "method": "get",
-        "summary": "List Runtime",
-        "id": 3
-      }
-    ]
-  },
-  {
-    "name": "health",
-    "actions": [
-      {
-        "path": "/health",
-        "method": "get",
-        "summary": "Health Check",
-        "id": 0
-      }
-    ]
-  }
-]
+      ]
+    }
+  ]
+}
