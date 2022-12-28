@@ -6,13 +6,20 @@ const _ = require('lodash')
  * @param {any} openApiSpec The OpenAPI spec of the API to generate the module for
  * @returns {import('./types').NodeApiSpec[]}
  */
-function generateModuleSdkSpec(openApiSpec) {
+function generateModuleSdkSpec(openApiSpec, ignoredPaths = []) {
     const groups = {}
 
     Object.keys(openApiSpec.paths).forEach((path) => {
+        if (ignoredPaths.includes(path)) {
+            return
+        }
+
         const endpointSpec = openApiSpec.paths[path]
         Object.keys(endpointSpec).forEach((method) => {
             const methodSpec = endpointSpec[method]
+            if (!methodSpec.tags) {
+                console.log(`No tags found for ${method} ${path}. Skipping.`)
+            }
             const tag = methodSpec.tags[0]
             // console.log(methodSpec)
             if (!groups[tag]) {
@@ -50,7 +57,7 @@ function generateModuleSdkSpec(openApiSpec) {
             /**
              * @type {import('./types').NodeApiActionSpec}
              */
-            nodeApiActionSpec = {
+            const nodeApiActionSpec = {
                 path: action.path,
                 method: action.method,
                 summary: action.methodSpec.summary,
@@ -93,18 +100,32 @@ function generateModuleSdkSpec(openApiSpec) {
             
             if (Array.isArray(openApiUrlParams)) {
                 const params = {}
+                const queryParams = {}
+                const headers = {}
                 openApiUrlParams.forEach(param => {
                     const schema = param.schema
+                    let paramSchema = param.schema
                     if (schema.$ref) {
                         const schemaPath = schema.$ref.replace('#/', '').replaceAll('/', '.')
-                        const paramSchema = _.get(openApiSpec, schemaPath)
+                        paramSchema = _.get(openApiSpec, schemaPath)
+                    }
+
+                    if (param.in === 'path') {
                         params[param.name] = paramSchema
-                    } else {
-                        params[param.name] = param.schema
+                    } else if (param.in === 'query') {
+                        queryParams[param.name] = paramSchema
+                    } else if (param.in === 'header') {
+                        headers[param.name] = paramSchema
                     }
                 })
-    
+
                 nodeApiActionSpec.params = params
+                nodeApiActionSpec.queryParams = queryParams
+                nodeApiActionSpec.headers = headers
+
+                if (headers.user) {
+                    nodeApiActionSpec.requiresAuth = true
+                }
             }
 
 
@@ -132,8 +153,9 @@ function generateModuleSdkSpec(openApiSpec) {
     return spec
 }
 
-// const openApiSpec = require(path.join(__dirname, 'test.json'))
-// const specs = generateModuleSdkSpec(openApiSpec)
+// const openApiSpec = require(path.join(__dirname, 'spec.json'))
+// const ignoredPaths = require(path.join(__dirname, 'ignore.json'))
+// const specs = generateModuleSdkSpec(openApiSpec, ignoredPaths)
 // console.log(JSON.stringify(specs, null, 2))
 
 module.exports = generateModuleSdkSpec

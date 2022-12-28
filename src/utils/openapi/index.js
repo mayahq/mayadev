@@ -11,34 +11,53 @@ const {
 } = require('./codegen')
 
 function generateNodesFromSpec({
-    specPath,
+    specPath = null,
     specType = 'openapi',
     outputPath = null,
-    category = null
+    category = null,
+    ignore = null
 } = {}) {
     if (specType !== 'openapi') {
         console.log('Only OpenAPI specs are supported at the moment. Aborting.')
         return
     }
 
-    if (!specPath) {
-        console.log('No spec path provided. Aborting.')
-        return
-    }
-
     const packagePath = findPackagePath()
     const packageDetails = getPackageDetails()
+
+    let spec = null
+    try {
+        if (specPath) {
+            spec = require(path.join(process.cwd(), specPath))
+        } else {
+            spec = require(path.join(packagePath, 'openapi/spec.json'))
+        }
+    } catch (e) {
+        return console.log('Spec file not found in module directory and not specified either. Aborting.')
+    }
 
     if (!outputPath) {
         outputPath = path.join(packagePath, 'src', 'nodes')
     }
 
+    let ignorePathFile = ''
+    if (ignore) {
+        ignorePathFile = path.join(process.cwd(), ignore)
+    } else {
+        ignorePathFile = path.join(packagePath, 'openapi/ignore.json')
+    }
+
+
     if (!packageDetails['node-red']) {
         packageDetails['node-red'] = { nodes: {} }
     }
 
-    const spec = require(path.join(process.cwd(), specPath))
-    const { endpoints: nodeSpecs, baseUrl } = generateModuleSdkSpec(spec)
+    let ignoredPaths = []
+    if (fs.existsSync(ignorePathFile)) {
+        ignoredPaths = require(ignorePathFile)
+    }
+
+    const { endpoints: nodeSpecs, baseUrl } = generateModuleSdkSpec(spec, ignoredPaths)
     const nodeCategory = category || _.startCase(packageDetails.name)
 
     const authConfigNodeRequired = nodeSpecs.some((nodeSpec) => {

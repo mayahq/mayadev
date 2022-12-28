@@ -1,10 +1,5 @@
-const path = require('path')
 const _ = require('lodash')
-const fs = require('fs')
-const dedent = require('dedent-js')
-const beautify = require('js-beautify')
 const prettier = require('prettier')
-const generateModuleSdkSpec = require('./spec')
 
 /**
  * @param {string} name name of field
@@ -25,9 +20,15 @@ const generateModuleSdkSpec = require('./spec')
             defaultType = 'num'
             break
         }
+        case 'boolean':
         case 'bool': {
             nodeRedTypes.push('bool')
             defaultType = 'bool'
+            break
+        }
+        case 'array': {
+            nodeRedTypes.push('json')
+            defaultType = 'json'
             break
         }
     }
@@ -36,74 +37,15 @@ const generateModuleSdkSpec = require('./spec')
         ${name}: new fields.Typed({
             type: "${defaultType}",
             allowedTypes: ${JSON.stringify(nodeRedTypes)},
-            defaultVal: "abc",
-            displayName: "${fieldsSpec.title}",
+            defaultVal: ${
+                JSON.stringify(fieldsSpec.default !== undefined 
+                    ? fieldsSpec.default : defaultType === 'json' ? [] : 'abc')
+            },
+            displayName: "${fieldsSpec.title || _.startCase(name)}",
         }),
     `
 }
 
-/**
- * 
- * @param {import('./types').NodeApiActionSpec} nodeApiActionSpec 
- */
-function generateFieldCode(nodeApiActionSpec) {
-    const fieldsCode = `
-        ${nodeApiActionSpec.requestBody === undefined ? '' : Object.keys(nodeApiActionSpec.requestBody).map((fieldName) => (
-            generateTypedFieldCode(fieldName, nodeApiActionSpec.requestBody[fieldName])
-        )).join('\n')}
-        ${nodeApiActionSpec.params === undefined ? '' : Object.keys(nodeApiActionSpec.params).map((fieldName) => (
-            generateTypedFieldCode(fieldName, nodeApiActionSpec.params[fieldName])
-        )).join('\n')}
-    `
-    return fieldsCode
-}
-
-/**
- * 
- * @param {import('./types').NodeApiActionSpec} action 
- */
-function generateActionCode(action, useAuth = false) {
-    let url = action.path
-    if (action.params && Object.keys(action.params).length > 0) {
-        Object.keys(action.params).forEach((paramName) => {
-            url = url.replace(`{${paramName}}`, `\${vals.${paramName}}`)
-        })
-    }
-
-    const actionCode = `
-        this.setStatus('PROGRESS', 'Processing...')
-
-        const request = {
-            url: \`${url}\`,
-            method: '${action.method}',
-            data: {
-                ${action.requestBody === undefined ? '' : Object.keys(action.requestBody).map((fieldName) => (
-                    `${fieldName}: vals.${fieldName},`
-                )).join('\n')}
-            },
-            ${
-                useAuth ? `
-                headers: {
-                    Authorization: \`Bearer \${this.credentials.auth.key}\`
-                }` : ''
-            }
-        }
-
-        try {
-            const response = await axios(request)
-            msg.payload = response.data
-            this.setStatus('SUCCESS', 'Done')
-        } catch (e) {
-            this.setStatus('ERROR', 'Error:' + e.toString())
-            msg.__isError = true
-            msg.__error = e
-        }
-
-        return msg
-    `
-
-    return actionCode
-}
 
 /**
  * 
@@ -121,6 +63,25 @@ function generateSchemaFileCodeForEndpoint(category, nodeApiActionSpec, packageN
             url = url.replace(`{${paramName}}`, `\${vals.${paramName}}`)
         })
     }
+
+    // console.log(nodeApiActionSpec.path, nodeApiActionSpec.queryParams)
+    if (nodeApiActionSpec.queryParams && Object.keys(nodeApiActionSpec.queryParams).length > 0) {
+        console.log('got queryParams', _.camelCase(nodeApiActionSpec.summary), nodeApiActionSpec.path, nodeApiActionSpec.queryParams)
+        const paramObj = {}
+        Object.keys(nodeApiActionSpec.queryParams).forEach((paramName) => {
+            paramObj[paramName] = `\${vals.${paramName}}`
+        })
+        let queryString = ''
+        // const queryString = new URLSearchParams(paramObj).toString()
+        Object.keys(paramObj).forEach(paramName => {
+            if (queryString.length === 0) {
+                queryString += `${paramName}=\${vals.${paramName}}`
+            } else {
+                queryString += `&${paramName}=\${vals${paramName}}`
+            }
+        })
+        url += `?${queryString}`
+    } 
 
     const nodeCode = `
         const { Node, Schema, fields } = require("@mayahq/module-sdk");
@@ -154,6 +115,9 @@ function generateSchemaFileCodeForEndpoint(category, nodeApiActionSpec, packageN
                     ${nodeApiActionSpec.params === undefined ? '' : Object.keys(nodeApiActionSpec.params).map((fieldName) => (
                         generateTypedFieldCode(fieldName, nodeApiActionSpec.params[fieldName])
                     )).join('\n')}
+                    ${nodeApiActionSpec.queryParams === undefined ? '' : Object.keys(nodeApiActionSpec.queryParams).map((fieldName) => (
+                        generateTypedFieldCode(fieldName, nodeApiActionSpec.queryParams[fieldName])
+                    )).join('\n')}
                 },
                 color: '#37B954'
             })
@@ -172,7 +136,7 @@ function generateSchemaFileCodeForEndpoint(category, nodeApiActionSpec, packageN
                     ${
                         useAuth ? `
                         headers: {
-                            Authorization: \`Bearer \${this.credentials.auth.key}\`
+                            Authorization: \`apikey \${this.credentials.auth.key}\`
                         }` : ''
                     }
                 }

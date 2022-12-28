@@ -5,14 +5,29 @@
       "name": "session",
       "actions": [
         {
-          "path": "/api/v1/session/new",
+          "path": "/v1/session/new",
           "method": "post",
           "summary": "New Session",
           "id": 0,
-          "requiresAuth": true
+          "requiresAuth": true,
+          "requestBody": {
+            "from_recipe": {
+              "title": "From Recipe",
+              "type": "string"
+            }
+          },
+          "params": {},
+          "queryParams": {},
+          "headers": {
+            "user": {
+              "title": "User",
+              "type": "string",
+              "default": "{\"profileSlug\":\"profile-ut1\"}"
+            }
+          }
         },
         {
-          "path": "/api/v1/session/{session_id}",
+          "path": "/v1/session/{session_id}",
           "method": "get",
           "summary": "Get Session",
           "id": 1,
@@ -22,10 +37,18 @@
               "title": "Session Id",
               "type": "string"
             }
+          },
+          "queryParams": {},
+          "headers": {
+            "user": {
+              "title": "User",
+              "type": "string",
+              "default": "{\"profileSlug\":\"profile-ut1\"}"
+            }
           }
         },
         {
-          "path": "/api/v1/session/{session_id}",
+          "path": "/v1/session/{session_id}",
           "method": "delete",
           "summary": "Delete Session",
           "id": 2,
@@ -35,17 +58,34 @@
               "title": "Session Id",
               "type": "string"
             }
+          },
+          "queryParams": {},
+          "headers": {
+            "user": {
+              "title": "User",
+              "type": "string",
+              "default": "{\"profileSlug\":\"profile-ut1\"}"
+            }
           }
         },
         {
-          "path": "/api/v1/sessions",
+          "path": "/v1/sessions",
           "method": "get",
           "summary": "List Sessions",
           "id": 3,
-          "requiresAuth": true
+          "requiresAuth": true,
+          "params": {},
+          "queryParams": {},
+          "headers": {
+            "user": {
+              "title": "User",
+              "type": "string",
+              "default": "{\"profileSlug\":\"profile-ut1\"}"
+            }
+          }
         },
         {
-          "path": "/api/v1/session/step/add",
+          "path": "/v1/session/step/add",
           "method": "post",
           "summary": "Add Step",
           "id": 4,
@@ -63,10 +103,19 @@
               "title": "Position",
               "type": "integer"
             }
+          },
+          "params": {},
+          "queryParams": {},
+          "headers": {
+            "user": {
+              "title": "User",
+              "type": "string",
+              "default": "{\"profileSlug\":\"profile-ut1\"}"
+            }
           }
         },
         {
-          "path": "/api/v1/session/step/delete",
+          "path": "/v1/session/step/delete",
           "method": "delete",
           "summary": "Delete Step",
           "id": 5,
@@ -80,10 +129,19 @@
               "title": "Step Id",
               "type": "string"
             }
+          },
+          "params": {},
+          "queryParams": {},
+          "headers": {
+            "user": {
+              "title": "User",
+              "type": "string",
+              "default": "{\"profileSlug\":\"profile-ut1\"}"
+            }
           }
         },
         {
-          "path": "/api/v1/session/clear",
+          "path": "/v1/session/clear",
           "method": "post",
           "summary": "Clear Session",
           "id": 6,
@@ -92,37 +150,85 @@
             "session_id": {
               "title": "Session Id",
               "type": "string"
-            },
-            "instruction": {
-              "title": "Instruction",
-              "type": "string"
-            },
-            "from_scratch": {
-              "title": "From Scratch",
-              "type": "boolean"
+            }
+          },
+          "params": {},
+          "queryParams": {},
+          "headers": {
+            "user": {
+              "title": "User",
+              "type": "string",
+              "default": "{\"profileSlug\":\"profile-ut1\"}"
             }
           }
         },
         {
-          "path": "/api/v1/session/undo",
+          "path": "/v1/session/change",
           "method": "post",
-          "summary": "Session Undo",
+          "summary": "Change Session",
           "id": 7,
-          "requiresAuth": false
+          "requiresAuth": true,
+          "requestBody": {
+            "session_id": {
+              "title": "Session Id",
+              "type": "string"
+            },
+            "diff": {
+              "$ref": "#/components/schemas/Diff"
+            }
+          },
+          "params": {},
+          "queryParams": {},
+          "headers": {
+            "user": {
+              "title": "User",
+              "type": "string",
+              "default": "{\"profileSlug\":\"profile-ut1\"}"
+            }
+          }
         },
         {
-          "path": "/api/v1/session/redo",
+          "path": "/v1/session/undo",
           "method": "post",
           "summary": "Session Undo",
           "id": 8,
           "requiresAuth": false
         },
         {
-          "path": "/api/v1/session/deploy",
+          "path": "/v1/session/redo",
           "method": "post",
-          "summary": "Session Deploy",
+          "summary": "Session Undo",
           "id": 9,
           "requiresAuth": false
+        },
+        {
+          "path": "/v1/session/deploy",
+          "method": "post",
+          "summary": "Session Deploy",
+          "id": 10,
+          "requiresAuth": true,
+          "requestBody": {
+            "session_id": {
+              "title": "Session Id",
+              "type": "string"
+            },
+            "workspace_id": {
+              "title": "Workspace Id",
+              "type": "string"
+            }
+          },
+          "params": {},
+          "queryParams": {},
+          "headers": {
+            "authorization": {
+              "title": "Authorization"
+            },
+            "user": {
+              "title": "User",
+              "type": "string",
+              "default": "{\"profileSlug\":\"ut1\"}"
+            }
+          }
         }
       ]
     },
@@ -130,66 +236,66 @@
       "name": "recipe",
       "actions": [
         {
-          "path": "/api/v1/library/recipe/new",
+          "path": "/v1/library/recipe/teach",
           "method": "post",
-          "summary": "Add Recipe",
+          "summary": "Teach Recipe",
           "id": 0,
-          "requiresAuth": false
-        },
-        {
-          "path": "/api/v1/library/recipe/{recipeId}",
-          "method": "get",
-          "summary": "Get Recipe",
-          "id": 1,
-          "requiresAuth": false,
-          "params": {
-            "recipeId": {
-              "title": "Recipeid"
+          "requiresAuth": true,
+          "requestBody": {
+            "request_body": {
+              "$ref": "#/components/schemas/RecipeRequest"
+            },
+            "file": {
+              "title": "File",
+              "type": "string",
+              "format": "binary"
+            }
+          },
+          "params": {},
+          "queryParams": {},
+          "headers": {
+            "user": {
+              "title": "User",
+              "type": "string",
+              "default": "{\"profileSlug\":\"profile-ut1\"}"
             }
           }
         },
         {
-          "path": "/api/v1/library/recipe/{recipeId}",
+          "path": "/v1/library/recipe/search",
+          "method": "get",
+          "summary": "Search Recipe",
+          "id": 1,
+          "requiresAuth": true,
+          "params": {},
+          "queryParams": {
+            "q": {
+              "title": "Q",
+              "type": "string",
+              "default": ""
+            }
+          },
+          "headers": {
+            "user": {
+              "title": "User",
+              "type": "string",
+              "default": "{\"profileSlug\":\"profile-ut1\"}"
+            }
+          }
+        },
+        {
+          "path": "/v1/library/recipe/{recipeId}",
           "method": "delete",
-          "summary": "Delete Recipe",
+          "summary": "Delete Profile Recipe",
           "id": 2,
           "requiresAuth": false,
           "params": {
             "recipeId": {
               "title": "Recipeid"
             }
-          }
-        },
-        {
-          "path": "/library/recipe/{recipeId}",
-          "method": "put",
-          "summary": "Update Recipe",
-          "id": 3,
-          "requiresAuth": false,
-          "params": {
-            "recipeId": {
-              "title": "Recipeid"
-            }
-          }
-        },
-        {
-          "path": "/api/v1/library/recipes",
-          "method": "get",
-          "summary": "List Recipes",
-          "id": 4,
-          "requiresAuth": true
-        },
-        {
-          "path": "/api/v1/library/recipe/teach",
-          "method": "post",
-          "summary": "Teach Recipe",
-          "id": 5,
-          "requiresAuth": true,
-          "requestBody": {
-            "request_body": {
-              "$ref": "#/components/schemas/RecipeRequest"
-            }
-          }
+          },
+          "queryParams": {},
+          "headers": {}
         }
       ]
     },
@@ -197,109 +303,303 @@
       "name": "step",
       "actions": [
         {
-          "path": "/api/v1/library/step/new",
-          "method": "post",
-          "summary": "Add Step",
-          "id": 0,
-          "requiresAuth": false
-        },
-        {
-          "path": "/api/v1/library/step/{stepId}",
-          "method": "get",
-          "summary": "Get Step",
-          "id": 1,
-          "requiresAuth": false,
-          "params": {
-            "stepId": {
-              "title": "Stepid"
-            }
-          }
-        },
-        {
-          "path": "/api/v1/library/step/{stepId}",
-          "method": "put",
-          "summary": "Update Step",
-          "id": 2,
-          "requiresAuth": false,
-          "params": {
-            "stepId": {
-              "title": "Stepid"
-            }
-          }
-        },
-        {
-          "path": "/api/v1/library/step/{stepId}",
-          "method": "delete",
-          "summary": "Delete Step",
-          "id": 3,
-          "requiresAuth": false,
-          "params": {
-            "stepId": {
-              "title": "Stepid"
-            }
-          }
-        },
-        {
-          "path": "/api/v1/library/steps",
-          "method": "get",
-          "summary": "List Steps",
-          "id": 4,
-          "requiresAuth": true
-        },
-        {
-          "path": "/api/v1/library/step/teach",
+          "path": "/v1/library/step/teach",
           "method": "post",
           "summary": "Teach Step",
-          "id": 5,
+          "id": 0,
           "requiresAuth": true,
           "requestBody": {
-            "request_body": {
-              "$ref": "#/components/schemas/TeachStepSubflowRequest"
+            "storage_mode": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/StorageMode"
+                }
+              ],
+              "default": "elastic"
+            },
+            "step_subflows": {
+              "title": "Step Subflows",
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {
+                  "type": "object"
+                }
+              }
+            },
+            "suggest_tests": {
+              "title": "Suggest Tests",
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "params": {},
+          "queryParams": {
+            "suggest_tests": {
+              "title": "Suggest Tests",
+              "type": "boolean",
+              "default": false
+            }
+          },
+          "headers": {
+            "user": {
+              "title": "User",
+              "type": "string",
+              "default": "{\"profileSlug\":\"profile-ut1\"}"
+            }
+          }
+        },
+        {
+          "path": "/v1/library/step/search",
+          "method": "get",
+          "summary": "Search Step",
+          "id": 1,
+          "requiresAuth": true,
+          "params": {},
+          "queryParams": {
+            "q": {
+              "title": "Q",
+              "type": "string",
+              "default": ""
+            }
+          },
+          "headers": {
+            "user": {
+              "title": "User",
+              "type": "string",
+              "default": "{\"profileSlug\":\"profile-ut1\"}"
+            }
+          }
+        },
+        {
+          "path": "/v1/library/step/clear",
+          "method": "get",
+          "summary": "Clear Steps",
+          "id": 2,
+          "requiresAuth": true,
+          "params": {},
+          "queryParams": {},
+          "headers": {
+            "user": {
+              "title": "User",
+              "type": "string",
+              "default": "{\"profileSlug\":\"profile-ut1\"}"
+            }
+          }
+        },
+        {
+          "path": "/v1/library/step/verify",
+          "method": "post",
+          "summary": "Verify Step",
+          "id": 3,
+          "requiresAuth": true,
+          "requestBody": {
+            "step_id": {
+              "title": "Step Id",
+              "type": "string"
+            },
+            "input": {
+              "title": "Input",
+              "type": "string",
+              "default": ""
+            },
+            "output": {
+              "title": "Output",
+              "type": "array",
+              "items": {
+                "type": "object"
+              },
+              "default": [
+                {}
+              ]
+            }
+          },
+          "params": {},
+          "queryParams": {},
+          "headers": {
+            "user": {
+              "title": "User",
+              "type": "string",
+              "default": "{\"profileSlug\":\"profile-ut1\"}"
+            }
+          }
+        },
+        {
+          "path": "/v1/library/step/{stepId}",
+          "method": "delete",
+          "summary": "Delete Step",
+          "id": 4,
+          "requiresAuth": true,
+          "params": {
+            "stepId": {
+              "title": "Stepid"
+            }
+          },
+          "queryParams": {},
+          "headers": {
+            "user": {
+              "title": "User",
+              "type": "string",
+              "default": "{\"profileSlug\":\"profile-ut1\"}"
             }
           }
         }
       ]
     },
     {
-      "name": "runtime",
+      "name": "document",
       "actions": [
         {
-          "path": "/api/v1/library/runtime/new",
+          "path": "/v1/library/document/add-docs",
           "method": "post",
-          "summary": "Create Runtime",
+          "summary": "Add Doc Text",
           "id": 0,
-          "requiresAuth": true
+          "requiresAuth": true,
+          "requestBody": {
+            "storage_mode": {
+              "allOf": [
+                {
+                  "$ref": "#/components/schemas/StorageMode"
+                }
+              ],
+              "default": "elastic"
+            },
+            "documents": {
+              "title": "Documents",
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            },
+            "source_type": {
+              "title": "Source Type",
+              "type": "string"
+            }
+          },
+          "params": {},
+          "queryParams": {},
+          "headers": {
+            "user": {
+              "title": "User",
+              "type": "string",
+              "default": "{\"profileSlug\":\"profile-ut1\"}"
+            }
+          }
         },
         {
-          "path": "/api/v1/library/runtime/{runtimeId}",
+          "path": "/v1/library/document/search",
           "method": "get",
-          "summary": "Get Runtime",
+          "summary": "Ask",
           "id": 1,
           "requiresAuth": true,
-          "params": {
-            "runtimeId": {
-              "title": "Runtimeid"
+          "params": {},
+          "queryParams": {
+            "q": {
+              "title": "Q",
+              "type": "string",
+              "default": ""
+            },
+            "limit": {
+              "title": "Limit",
+              "type": "integer",
+              "default": 3
+            }
+          },
+          "headers": {
+            "user": {
+              "title": "User",
+              "type": "string",
+              "default": "{\"profileSlug\":\"profile-ut1\"}"
             }
           }
         },
         {
-          "path": "/api/v1/library/runtime/{runtimeId}",
-          "method": "delete",
-          "summary": "Delete Runtime",
+          "path": "/v1/library/document/ask",
+          "method": "get",
+          "summary": "Ask",
           "id": 2,
           "requiresAuth": true,
-          "params": {
-            "runtimeId": {
-              "title": "Runtimeid"
+          "params": {},
+          "queryParams": {
+            "q": {
+              "title": "Q",
+              "type": "string",
+              "default": ""
+            }
+          },
+          "headers": {
+            "user": {
+              "title": "User",
+              "type": "string",
+              "default": "{\"profileSlug\":\"profile-ut1\"}"
             }
           }
         },
         {
-          "path": "/api/v1/library/runtimes",
+          "path": "/v1/library/document/list",
           "method": "get",
-          "summary": "List Runtime",
+          "summary": "Ask",
           "id": 3,
+          "requiresAuth": true,
+          "params": {},
+          "queryParams": {},
+          "headers": {
+            "user": {
+              "title": "User",
+              "type": "string",
+              "default": "{\"profileSlug\":\"profile-ut1\"}"
+            }
+          }
+        },
+        {
+          "path": "/v1/library/document/recommend",
+          "method": "get",
+          "summary": "Recommend",
+          "id": 4,
+          "requiresAuth": true,
+          "params": {},
+          "queryParams": {
+            "q": {
+              "title": "Q",
+              "type": "string",
+              "default": ""
+            }
+          },
+          "headers": {
+            "user": {
+              "title": "User",
+              "type": "string",
+              "default": "{\"profileSlug\":\"profile-ut1\"}"
+            }
+          }
+        },
+        {
+          "path": "/v1/library/document/all",
+          "method": "delete",
+          "summary": "Delete",
+          "id": 5,
           "requiresAuth": true
+        },
+        {
+          "path": "/v1/library/document/{document_id}",
+          "method": "delete",
+          "summary": "Delete",
+          "id": 6,
+          "requiresAuth": true,
+          "params": {
+            "document_id": {
+              "title": "Document Id",
+              "type": "string"
+            }
+          },
+          "queryParams": {},
+          "headers": {
+            "user": {
+              "title": "User",
+              "type": "string",
+              "default": "{\"profileSlug\":\"profile-ut1\"}"
+            }
+          }
         }
       ]
     },

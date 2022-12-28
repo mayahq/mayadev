@@ -173,12 +173,18 @@ yargs(hideBin(process.argv))
                 type: 'string',
                 description: 'Base category of the all generated nodes'
             })
+            .option('ignore', {
+                alias: 'i',
+                type: 'string',
+                description: 'Path to file containing endpoints to ignore'
+            })
     }, (argv) => {
         generateNodesFromSpec({
             specType: argv['spec-type'],
             specPath: argv['spec-path'],
             outputPath: argv['output-path'],
             category: argv['category'],
+            ignore: argv['ignore']
         })
     })
     .argv

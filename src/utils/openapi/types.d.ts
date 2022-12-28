@@ -15,6 +15,8 @@ export type NodeApiActionSpec = {
     summary: string;
     requestBody: RequestBody;
     params: RequestBody;
+    queryParams: RequestBody;
+    headers: RequestBody;
     id: number;
     requiresAuth: boolean;
 }

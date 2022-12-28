@@ -1,0 +1,1572 @@
+{
+    "openapi": "3.0.2",
+    "info": {
+      "title": "Maya Beta API",
+      "description": "API for instructing Maya to do any task.",
+      "contact": {
+        "name": "Maya Support",
+        "url": "https://mayalabs.io",
+        "email": "humans@mayalabs.io"
+      },
+      "license": {
+        "name": "Apache 2.0",
+        "url": "https://www.apache.org/licenses/LICENSE-2.0.html"
+      },
+      "version": "0.0.1-beta"
+    },
+    "paths": {
+      "/v1/session/new": {
+        "post": {
+          "tags": ["session"],
+          "summary": "New Session",
+          "description": "Create a new session.",
+          "operationId": "new_session_v1_session_new_post",
+          "parameters": [
+            {
+              "required": false,
+              "schema": {
+                "title": "User",
+                "type": "string",
+                "default": "{\"profileSlug\":\"profile-ut1\"}"
+              },
+              "name": "user",
+              "in": "header"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/NewSessionRequest" }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/session/{session_id}": {
+        "get": {
+          "tags": ["session"],
+          "summary": "Get Session",
+          "description": "Get session by session id",
+          "operationId": "get_session_v1_session__session_id__get",
+          "parameters": [
+            {
+              "required": true,
+              "schema": { "title": "Session Id", "type": "string" },
+              "name": "session_id",
+              "in": "path"
+            },
+            {
+              "required": false,
+              "schema": {
+                "title": "User",
+                "type": "string",
+                "default": "{\"profileSlug\":\"profile-ut1\"}"
+              },
+              "name": "user",
+              "in": "header"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                }
+              }
+            }
+          }
+        },
+        "delete": {
+          "tags": ["session"],
+          "summary": "Delete Session",
+          "operationId": "delete_session_v1_session__session_id__delete",
+          "parameters": [
+            {
+              "required": true,
+              "schema": { "title": "Session Id", "type": "string" },
+              "name": "session_id",
+              "in": "path"
+            },
+            {
+              "required": false,
+              "schema": {
+                "title": "User",
+                "type": "string",
+                "default": "{\"profileSlug\":\"profile-ut1\"}"
+              },
+              "name": "user",
+              "in": "header"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/sessions": {
+        "get": {
+          "tags": ["session"],
+          "summary": "List Sessions",
+          "operationId": "list_sessions_v1_sessions_get",
+          "parameters": [
+            {
+              "required": false,
+              "schema": {
+                "title": "User",
+                "type": "string",
+                "default": "{\"profileSlug\":\"profile-ut1\"}"
+              },
+              "name": "user",
+              "in": "header"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/session/step/add": {
+        "post": {
+          "tags": ["session"],
+          "summary": "Add Step",
+          "operationId": "add_step_v1_session_step_add_post",
+          "parameters": [
+            {
+              "required": false,
+              "schema": {
+                "title": "User",
+                "type": "string",
+                "default": "{\"profileSlug\":\"profile-ut1\"}"
+              },
+              "name": "user",
+              "in": "header"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AddStepRequest" }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/session/step/delete": {
+        "delete": {
+          "tags": ["session"],
+          "summary": "Delete Step",
+          "operationId": "delete_step_v1_session_step_delete_delete",
+          "parameters": [
+            {
+              "required": false,
+              "schema": {
+                "title": "User",
+                "type": "string",
+                "default": "{\"profileSlug\":\"profile-ut1\"}"
+              },
+              "name": "user",
+              "in": "header"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/DeleteStepRequest" }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/session/clear": {
+        "post": {
+          "tags": ["session"],
+          "summary": "Clear Session",
+          "operationId": "clear_session_v1_session_clear_post",
+          "parameters": [
+            {
+              "required": false,
+              "schema": {
+                "title": "User",
+                "type": "string",
+                "default": "{\"profileSlug\":\"profile-ut1\"}"
+              },
+              "name": "user",
+              "in": "header"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ClearSessionRequest" }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/session/change": {
+        "post": {
+          "tags": ["session"],
+          "summary": "Change Session",
+          "operationId": "change_session_v1_session_change_post",
+          "parameters": [
+            {
+              "required": false,
+              "schema": {
+                "title": "User",
+                "type": "string",
+                "default": "{\"profileSlug\":\"profile-ut1\"}"
+              },
+              "name": "user",
+              "in": "header"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ChangeSessionRequest" }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/session/undo": {
+        "post": {
+          "tags": ["session"],
+          "summary": "Session Undo",
+          "operationId": "session_undo_v1_session_undo_post",
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" }
+          }
+        }
+      },
+      "/v1/session/redo": {
+        "post": {
+          "tags": ["session"],
+          "summary": "Session Undo",
+          "operationId": "session_undo_v1_session_redo_post",
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" }
+          }
+        }
+      },
+      "/v1/session/deploy": {
+        "post": {
+          "tags": ["session"],
+          "summary": "Session Deploy",
+          "operationId": "session_deploy_v1_session_deploy_post",
+          "parameters": [
+            {
+              "required": false,
+              "schema": { "title": "Authorization" },
+              "name": "authorization",
+              "in": "header"
+            },
+            {
+              "required": false,
+              "schema": {
+                "title": "User",
+                "type": "string",
+                "default": "{\"profileSlug\":\"ut1\"}"
+              },
+              "name": "user",
+              "in": "header"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/DeploySessionRequest" }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/library/recipe/teach": {
+        "post": {
+          "tags": ["recipe", "recipe"],
+          "summary": "Teach Recipe",
+          "operationId": "teach_recipe_v1_library_recipe_teach_post",
+          "parameters": [
+            {
+              "required": false,
+              "schema": {
+                "title": "User",
+                "type": "string",
+                "default": "{\"profileSlug\":\"profile-ut1\"}"
+              },
+              "name": "user",
+              "in": "header"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Body_teach_recipe_v1_library_recipe_teach_post"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/library/recipe/teach-files": {
+        "post": {
+          "tags": ["recipe", "recipe"],
+          "summary": "Teach Recipe",
+          "operationId": "teach_recipe_v1_library_recipe_teach_files_post",
+          "parameters": [
+            {
+              "required": false,
+              "schema": {
+                "title": "User",
+                "type": "string",
+                "default": "{\"profileSlug\":\"profile-ut1\"}"
+              },
+              "name": "user",
+              "in": "header"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/Body_teach_recipe_v1_library_recipe_teach_files_post"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/library/recipe/search": {
+        "get": {
+          "tags": ["recipe", "recipe"],
+          "summary": "Search Recipe",
+          "operationId": "search_recipe_v1_library_recipe_search_get",
+          "parameters": [
+            {
+              "required": false,
+              "schema": { "title": "Q", "type": "string", "default": "" },
+              "name": "q",
+              "in": "query"
+            },
+            {
+              "required": false,
+              "schema": {
+                "title": "User",
+                "type": "string",
+                "default": "{\"profileSlug\":\"profile-ut1\"}"
+              },
+              "name": "user",
+              "in": "header"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/library/recipe/{recipeId}": {
+        "delete": {
+          "tags": ["recipe", "recipe"],
+          "summary": "Delete Profile Recipe",
+          "operationId": "delete_profile_recipe_v1_library_recipe__recipeId__delete",
+          "parameters": [
+            {
+              "required": true,
+              "schema": { "title": "Recipeid" },
+              "name": "recipeId",
+              "in": "path"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/library/step/teach-files": {
+        "post": {
+          "tags": ["step", "step"],
+          "summary": "Teach Step",
+          "description": "_summary_\n\nArgs:\n    files (List[UploadFile], optional): _description_. Defaults to File(default=None, media_type=\"application/json\").\n    suggest_tests (bool, optional): _description_. Defaults to Query(default=False).\n    profile (Profile, optional): _description_. Defaults to Depends(api_key_auth).\n\nRaises:\n    HTTPException: _description_\n\nReturns:\n    _type_: _description_",
+          "operationId": "teach_step_v1_library_step_teach_files_post",
+          "parameters": [
+            {
+              "required": false,
+              "schema": {
+                "title": "Suggest Tests",
+                "type": "boolean",
+                "default": false
+              },
+              "name": "suggest_tests",
+              "in": "query"
+            },
+            {
+              "required": false,
+              "schema": {
+                "title": "User",
+                "type": "string",
+                "default": "{\"profileSlug\":\"profile-ut1\"}"
+              },
+              "name": "user",
+              "in": "header"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/Body_teach_step_v1_library_step_teach_files_post"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/library/step/teach": {
+        "post": {
+          "tags": ["step", "step"],
+          "summary": "Teach Step",
+          "operationId": "teach_step_v1_library_step_teach_post",
+          "parameters": [
+            {
+              "required": false,
+              "schema": {
+                "title": "Suggest Tests",
+                "type": "boolean",
+                "default": false
+              },
+              "name": "suggest_tests",
+              "in": "query"
+            },
+            {
+              "required": false,
+              "schema": {
+                "title": "User",
+                "type": "string",
+                "default": "{\"profileSlug\":\"profile-ut1\"}"
+              },
+              "name": "user",
+              "in": "header"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TeachStepSubflowRequest"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/library/step/search": {
+        "get": {
+          "tags": ["step", "step"],
+          "summary": "Search Step",
+          "operationId": "search_step_v1_library_step_search_get",
+          "parameters": [
+            {
+              "required": false,
+              "schema": { "title": "Q", "type": "string", "default": "" },
+              "name": "q",
+              "in": "query"
+            },
+            {
+              "required": false,
+              "schema": {
+                "title": "User",
+                "type": "string",
+                "default": "{\"profileSlug\":\"profile-ut1\"}"
+              },
+              "name": "user",
+              "in": "header"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/library/step/clear": {
+        "get": {
+          "tags": ["step", "step"],
+          "summary": "Clear Steps",
+          "operationId": "clear_steps_v1_library_step_clear_get",
+          "parameters": [
+            {
+              "required": false,
+              "schema": {
+                "title": "User",
+                "type": "string",
+                "default": "{\"profileSlug\":\"profile-ut1\"}"
+              },
+              "name": "user",
+              "in": "header"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/library/step/verify": {
+        "post": {
+          "tags": ["step", "step"],
+          "summary": "Verify Step",
+          "operationId": "verify_step_v1_library_step_verify_post",
+          "parameters": [
+            {
+              "required": false,
+              "schema": {
+                "title": "User",
+                "type": "string",
+                "default": "{\"profileSlug\":\"profile-ut1\"}"
+              },
+              "name": "user",
+              "in": "header"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/SuggestedTest" }
+              }
+            },
+            "required": true
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/library/step/{stepId}": {
+        "delete": {
+          "tags": ["step", "step"],
+          "summary": "Delete Step",
+          "operationId": "delete_step_v1_library_step__stepId__delete",
+          "parameters": [
+            {
+              "required": true,
+              "schema": { "title": "Stepid" },
+              "name": "stepId",
+              "in": "path"
+            },
+            {
+              "required": false,
+              "schema": {
+                "title": "User",
+                "type": "string",
+                "default": "{\"profileSlug\":\"profile-ut1\"}"
+              },
+              "name": "user",
+              "in": "header"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/library/document/add-docs-files": {
+        "post": {
+          "tags": ["document", "document"],
+          "summary": "Add Doc Files",
+          "operationId": "add_doc_files_v1_library_document_add_docs_files_post",
+          "parameters": [
+            {
+              "required": false,
+              "schema": {
+                "title": "User",
+                "type": "string",
+                "default": "{\"profileSlug\":\"profile-ut1\"}"
+              },
+              "name": "user",
+              "in": "header"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "multipart/form-data": {
+                "schema": {
+                  "$ref": "#/components/schemas/Body_add_doc_files_v1_library_document_add_docs_files_post"
+                }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/library/document/add-docs": {
+        "post": {
+          "tags": ["document", "document"],
+          "summary": "Add Doc Text",
+          "operationId": "add_doc_text_v1_library_document_add_docs_post",
+          "parameters": [
+            {
+              "required": false,
+              "schema": {
+                "title": "User",
+                "type": "string",
+                "default": "{\"profileSlug\":\"profile-ut1\"}"
+              },
+              "name": "user",
+              "in": "header"
+            }
+          ],
+          "requestBody": {
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/AddDocumentRequest" }
+              }
+            }
+          },
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/library/document/search": {
+        "get": {
+          "tags": ["document", "document"],
+          "summary": "Ask",
+          "operationId": "ask_v1_library_document_search_get",
+          "parameters": [
+            {
+              "required": false,
+              "schema": { "title": "Q", "type": "string", "default": "" },
+              "name": "q",
+              "in": "query"
+            },
+            {
+              "required": false,
+              "schema": { "title": "Limit", "type": "integer", "default": 3 },
+              "name": "limit",
+              "in": "query"
+            },
+            {
+              "required": false,
+              "schema": {
+                "title": "User",
+                "type": "string",
+                "default": "{\"profileSlug\":\"profile-ut1\"}"
+              },
+              "name": "user",
+              "in": "header"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/library/document/ask": {
+        "get": {
+          "tags": ["document", "document"],
+          "summary": "Ask",
+          "operationId": "ask_v1_library_document_ask_get",
+          "parameters": [
+            {
+              "required": false,
+              "schema": { "title": "Q", "type": "string", "default": "" },
+              "name": "q",
+              "in": "query"
+            },
+            {
+              "required": false,
+              "schema": {
+                "title": "User",
+                "type": "string",
+                "default": "{\"profileSlug\":\"profile-ut1\"}"
+              },
+              "name": "user",
+              "in": "header"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/library/document/list": {
+        "get": {
+          "tags": ["document", "document"],
+          "summary": "Ask",
+          "operationId": "ask_v1_library_document_list_get",
+          "parameters": [
+            {
+              "required": false,
+              "schema": {
+                "title": "User",
+                "type": "string",
+                "default": "{\"profileSlug\":\"profile-ut1\"}"
+              },
+              "name": "user",
+              "in": "header"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/library/document/recommend": {
+        "get": {
+          "tags": ["document", "document"],
+          "summary": "Recommend",
+          "operationId": "recommend_v1_library_document_recommend_get",
+          "parameters": [
+            {
+              "required": false,
+              "schema": { "title": "Q", "type": "string", "default": "" },
+              "name": "q",
+              "in": "query"
+            },
+            {
+              "required": false,
+              "schema": {
+                "title": "User",
+                "type": "string",
+                "default": "{\"profileSlug\":\"profile-ut1\"}"
+              },
+              "name": "user",
+              "in": "header"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/v1/library/document/all": {
+        "delete": {
+          "tags": ["document", "document"],
+          "summary": "Delete",
+          "operationId": "delete_v1_library_document_all_delete",
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" }
+          },
+          "security": [{ "HTTPBearer": [] }]
+        }
+      },
+      "/v1/library/document/{document_id}": {
+        "delete": {
+          "tags": ["document", "document"],
+          "summary": "Delete",
+          "operationId": "delete_v1_library_document__document_id__delete",
+          "parameters": [
+            {
+              "required": true,
+              "schema": { "title": "Document Id", "type": "string" },
+              "name": "document_id",
+              "in": "path"
+            },
+            {
+              "required": false,
+              "schema": {
+                "title": "User",
+                "type": "string",
+                "default": "{\"profileSlug\":\"profile-ut1\"}"
+              },
+              "name": "user",
+              "in": "header"
+            }
+          ],
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            },
+            "404": { "description": "Not found" },
+            "422": {
+              "description": "Validation Error",
+              "content": {
+                "application/json": {
+                  "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                }
+              }
+            }
+          }
+        }
+      },
+      "/health": {
+        "get": {
+          "tags": ["health"],
+          "summary": "Health Check",
+          "operationId": "health_check_health_get",
+          "responses": {
+            "200": {
+              "description": "Successful Response",
+              "content": { "application/json": { "schema": {} } }
+            }
+          }
+        }
+      }
+    },
+    "components": {
+      "schemas": {
+        "AddDocumentRequest": {
+          "title": "AddDocumentRequest",
+          "required": ["documents"],
+          "type": "object",
+          "properties": {
+            "storage_mode": {
+              "allOf": [{ "$ref": "#/components/schemas/StorageMode" }],
+              "default": "elastic"
+            },
+            "documents": {
+              "title": "Documents",
+              "type": "array",
+              "items": { "type": "string" }
+            },
+            "source_type": { "title": "Source Type", "type": "string" }
+          }
+        },
+        "AddStepRequest": {
+          "title": "AddStepRequest",
+          "required": ["session_id", "step_prompt", "position"],
+          "type": "object",
+          "properties": {
+            "session_id": { "title": "Session Id", "type": "string" },
+            "step_prompt": { "title": "Step Prompt", "type": "string" },
+            "position": { "title": "Position", "type": "integer" }
+          }
+        },
+        "Body_add_doc_files_v1_library_document_add_docs_files_post": {
+          "title": "Body_add_doc_files_v1_library_document_add_docs_files_post",
+          "type": "object",
+          "properties": {
+            "files": {
+              "title": "Files",
+              "type": "array",
+              "items": { "type": "string", "format": "binary" }
+            }
+          }
+        },
+        "Body_teach_recipe_v1_library_recipe_teach_files_post": {
+          "title": "Body_teach_recipe_v1_library_recipe_teach_files_post",
+          "type": "object",
+          "properties": {
+            "file": { "title": "File", "type": "string", "format": "binary" }
+          }
+        },
+        "Body_teach_recipe_v1_library_recipe_teach_post": {
+          "title": "Body_teach_recipe_v1_library_recipe_teach_post",
+          "type": "object",
+          "properties": {
+            "request_body": { "$ref": "#/components/schemas/RecipeRequest" },
+            "file": { "title": "File", "type": "string", "format": "binary" }
+          }
+        },
+        "Body_teach_step_v1_library_step_teach_files_post": {
+          "title": "Body_teach_step_v1_library_step_teach_files_post",
+          "type": "object",
+          "properties": {
+            "files": {
+              "title": "Files",
+              "type": "array",
+              "items": { "type": "string", "format": "binary" }
+            }
+          }
+        },
+        "ChangeSessionRequest": {
+          "title": "ChangeSessionRequest",
+          "required": ["session_id", "diff"],
+          "type": "object",
+          "properties": {
+            "session_id": { "title": "Session Id", "type": "string" },
+            "diff": { "$ref": "#/components/schemas/Diff" }
+          }
+        },
+        "ClearSessionRequest": {
+          "title": "ClearSessionRequest",
+          "required": ["session_id"],
+          "type": "object",
+          "properties": {
+            "session_id": { "title": "Session Id", "type": "string" }
+          }
+        },
+        "DeleteStepRequest": {
+          "title": "DeleteStepRequest",
+          "required": ["session_id", "step_id"],
+          "type": "object",
+          "properties": {
+            "session_id": { "title": "Session Id", "type": "string" },
+            "step_id": { "title": "Step Id", "type": "string" }
+          }
+        },
+        "DeploySessionRequest": {
+          "title": "DeploySessionRequest",
+          "required": ["session_id", "workspace_id"],
+          "type": "object",
+          "properties": {
+            "session_id": { "title": "Session Id", "type": "string" },
+            "workspace_id": { "title": "Workspace Id", "type": "string" }
+          }
+        },
+        "Diff": {
+          "title": "Diff",
+          "required": ["recipes", "steps"],
+          "type": "object",
+          "properties": {
+            "recipes": { "$ref": "#/components/schemas/RecipeDiff" },
+            "steps": { "$ref": "#/components/schemas/StepDiff" }
+          }
+        },
+        "Flow": {
+          "title": "Flow",
+          "type": "object",
+          "properties": {
+            "nodes": {
+              "title": "Nodes",
+              "type": "array",
+              "items": { "$ref": "#/components/schemas/Node" },
+              "default": []
+            },
+            "start_node": {
+              "title": "Start Node",
+              "type": "string",
+              "default": ""
+            },
+            "end_node": { "title": "End Node", "type": "string", "default": "" },
+            "ignore_ids": {
+              "title": "Ignore Ids",
+              "type": "array",
+              "items": { "type": "string" },
+              "default": []
+            },
+            "main": {
+              "title": "Main",
+              "type": "array",
+              "items": { "$ref": "#/components/schemas/Node" },
+              "default": []
+            },
+            "nodes_norm": {
+              "title": "Nodes Norm",
+              "type": "object",
+              "default": {}
+            }
+          }
+        },
+        "HTTPValidationError": {
+          "title": "HTTPValidationError",
+          "type": "object",
+          "properties": {
+            "detail": {
+              "title": "Detail",
+              "type": "array",
+              "items": { "$ref": "#/components/schemas/ValidationError" }
+            }
+          }
+        },
+        "NewSessionRequest": {
+          "title": "NewSessionRequest",
+          "type": "object",
+          "properties": {
+            "from_recipe": { "title": "From Recipe", "type": "string" }
+          }
+        },
+        "Node": {
+          "title": "Node",
+          "type": "object",
+          "properties": {
+            "name": { "title": "Name", "type": "string", "default": "" },
+            "tmp_id": { "title": "Tmp Id", "type": "string", "default": "" },
+            "id": { "title": "Id", "type": "string", "default": "" },
+            "tmp_step_id": {
+              "title": "Tmp Step Id",
+              "type": "string",
+              "default": ""
+            },
+            "wires": { "title": "Wires", "default": [[]] },
+            "module": { "title": "Module", "type": "string", "default": "" },
+            "version": { "title": "Version", "type": "string", "default": "" },
+            "type": { "title": "Type", "type": "string", "default": "" },
+            "x": { "title": "X", "type": "integer", "default": 0 },
+            "y": { "title": "Y", "type": "integer", "default": 0 },
+            "z": { "title": "Z", "type": "string", "default": "" },
+            "properties": {
+              "title": "Properties",
+              "type": "object",
+              "default": {}
+            }
+          }
+        },
+        "RecipeDiff": {
+          "title": "RecipeDiff",
+          "required": ["added", "changed", "deleted"],
+          "type": "object",
+          "properties": {
+            "added": {
+              "title": "Added",
+              "type": "array",
+              "items": { "$ref": "#/components/schemas/StepContainer" }
+            },
+            "changed": {
+              "title": "Changed",
+              "type": "array",
+              "items": { "$ref": "#/components/schemas/StepContainer" }
+            },
+            "deleted": {
+              "title": "Deleted",
+              "type": "array",
+              "items": { "$ref": "#/components/schemas/StepContainer" }
+            }
+          }
+        },
+        "RecipeObject": {
+          "title": "RecipeObject",
+          "type": "object",
+          "properties": {
+            "text": {
+              "title": "Text",
+              "type": "string",
+              "default": "1. Step 1\n2. Step 2\n3. Step 3."
+            },
+            "metadata": { "title": "Metadata", "type": "object", "default": {} },
+            "description": {
+              "title": "Description",
+              "type": "string",
+              "description": "A human understandable description of what the recipe does"
+            }
+          }
+        },
+        "RecipeRequest": {
+          "title": "RecipeRequest",
+          "type": "object",
+          "properties": {
+            "storage_mode": {
+              "allOf": [{ "$ref": "#/components/schemas/StorageMode" }],
+              "default": "elastic"
+            },
+            "recipe": {
+              "title": "Recipe",
+              "type": "array",
+              "items": { "$ref": "#/components/schemas/RecipeObject" }
+            }
+          }
+        },
+        "Sample": {
+          "title": "Sample",
+          "type": "object",
+          "properties": {
+            "command": { "title": "Command", "type": "string" },
+            "flow": { "$ref": "#/components/schemas/Flow" }
+          }
+        },
+        "Step": {
+          "title": "Step",
+          "type": "object",
+          "properties": {
+            "step": { "title": "Step", "type": "string" },
+            "flow": { "$ref": "#/components/schemas/Flow" },
+            "samples": {
+              "title": "Samples",
+              "type": "array",
+              "items": { "$ref": "#/components/schemas/Sample" },
+              "default": []
+            },
+            "sample_step": {
+              "title": "Sample Step",
+              "type": "string",
+              "default": ""
+            },
+            "sample_flow": { "$ref": "#/components/schemas/Flow" }
+          }
+        },
+        "StepContainer": {
+          "title": "StepContainer",
+          "type": "object",
+          "properties": {
+            "id": { "title": "Id", "type": "string" },
+            "step_obj": { "$ref": "#/components/schemas/Step" },
+            "type": { "title": "Type", "type": "string" },
+            "indent_lvl": { "title": "Indent Lvl", "type": "integer" },
+            "from_node": { "title": "From Node", "type": "string" },
+            "lvl_idx": { "title": "Lvl Idx", "type": "integer", "default": 0 },
+            "prefix": { "title": "Prefix", "type": "string", "default": "" },
+            "parent_id": {
+              "title": "Parent Id",
+              "type": "string",
+              "default": ""
+            },
+            "children": {
+              "title": "Children",
+              "type": "array",
+              "items": { "$ref": "#/components/schemas/StepContainer" },
+              "default": []
+            },
+            "x_coord": { "title": "X Coord", "type": "integer", "default": 0 },
+            "y_coord": { "title": "Y Coord", "type": "integer", "default": 0 },
+            "scrambled": {
+              "title": "Scrambled",
+              "type": "boolean",
+              "default": false
+            },
+            "generated": {
+              "title": "Generated",
+              "type": "boolean",
+              "default": false
+            },
+            "transformed": {
+              "title": "Transformed",
+              "type": "boolean",
+              "default": false
+            },
+            "deployed": {
+              "title": "Deployed",
+              "type": "boolean",
+              "default": false
+            },
+            "missing_reqs": {
+              "title": "Missing Reqs",
+              "type": "array",
+              "items": { "type": "object" },
+              "default": []
+            }
+          },
+          "description": "A container for the step object. "
+        },
+        "StepDiff": {
+          "title": "StepDiff",
+          "required": ["added", "changed", "deleted"],
+          "type": "object",
+          "properties": {
+            "added": {
+              "title": "Added",
+              "type": "array",
+              "items": { "$ref": "#/components/schemas/Node" }
+            },
+            "changed": {
+              "title": "Changed",
+              "type": "array",
+              "items": { "$ref": "#/components/schemas/Node" }
+            },
+            "deleted": {
+              "title": "Deleted",
+              "type": "array",
+              "items": { "$ref": "#/components/schemas/Node" }
+            }
+          }
+        },
+        "StorageMode": {
+          "title": "StorageMode",
+          "enum": ["elastic", "s3", "filesystem"],
+          "type": "string",
+          "description": "An enumeration."
+        },
+        "SuggestedTest": {
+          "title": "SuggestedTest",
+          "required": ["step_id"],
+          "type": "object",
+          "properties": {
+            "step_id": { "title": "Step Id", "type": "string" },
+            "input": { "title": "Input", "type": "string", "default": "" },
+            "output": {
+              "title": "Output",
+              "type": "array",
+              "items": { "type": "object" },
+              "default": [{}]
+            }
+          }
+        },
+        "TeachStepSubflowRequest": {
+          "title": "TeachStepSubflowRequest",
+          "required": ["step_subflows"],
+          "type": "object",
+          "properties": {
+            "storage_mode": {
+              "allOf": [{ "$ref": "#/components/schemas/StorageMode" }],
+              "default": "elastic"
+            },
+            "step_subflows": {
+              "title": "Step Subflows",
+              "type": "array",
+              "items": { "type": "array", "items": { "type": "object" } }
+            },
+            "suggest_tests": {
+              "title": "Suggest Tests",
+              "type": "boolean",
+              "default": false
+            }
+          }
+        },
+        "ValidationError": {
+          "title": "ValidationError",
+          "required": ["loc", "msg", "type"],
+          "type": "object",
+          "properties": {
+            "loc": {
+              "title": "Location",
+              "type": "array",
+              "items": { "anyOf": [{ "type": "string" }, { "type": "integer" }] }
+            },
+            "msg": { "title": "Message", "type": "string" },
+            "type": { "title": "Error Type", "type": "string" }
+          }
+        }
+      },
+      "securitySchemes": { "HTTPBearer": { "type": "http", "scheme": "bearer" } }
+    },
+    "tags": [
+      {
+        "name": "session",
+        "description": "A session is a transient interaction with the agent for generating programs and doing actions."
+      },
+      { "name": "step", "description": "command <> flow pairs with samples." },
+      { "name": "recipe", "description": "A collection of steps." },
+      {
+        "name": "runtime",
+        "description": "A tiny piece of compute and flow editor that a session can latch on to in order to run a program."
+      },
+      {
+        "name": "library",
+        "description": "A library contains everything persistent about the agent : steps, recipes, runtimes, and soon knowledge bases. Coming soon."
+      }
+    ]
+  }
+  
